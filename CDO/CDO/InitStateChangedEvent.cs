@@ -5,21 +5,27 @@ using System.Text;
 
 namespace CDO
 {
-    class InitStateChangedEvent
+
+    public enum InitState
+    {
+        INITIALIZED,ERROR
+    }
+
+    public class InitStateChangedEvent
     {
 
-        private string _state;
+        private InitState _state;
         private int _errCode;
         private string _errMessage;
 
-        public InitStateChangedEvent(string state, int errCode, string errMessage)
+        public InitStateChangedEvent(InitState state, int errCode, string errMessage)
         {
             this._state = state;
             this._errCode = errCode;
             this._errMessage = errMessage;
         }
 
-        public string state
+        public InitState state
         {
             get { return this._state; }
         }

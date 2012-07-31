@@ -27,34 +27,52 @@ For more information, please refer to <http://unlicense.org/>
 
 /**
  * 
- */ 
+ */
 namespace CDO
 {
 
-    /**
-     * 
-     */ 
+   
+
     public class Platform
     {
-        
-    }
+
+        /**
+         * Singleton!
+         */
+        private Platform()
+        {
+        }
+
+        ~Platform()
+        {
+            release();
+        }
+
+        public static Platform instance()
+        {
+            // Create singleton here
+            return null;
+        }
+
+        public void init(PlatformInitListener listener)
+        {
+            //Perform platform initialization
+        }
+
+        public void release()
+        {
+            // dispose the platform
+        }
 
 
-    public interface PlatformInitListener
-    {
-       
+        public CloudeoService getService()
+        {
+            return null;
+        }
 
-    }
+        public void renderSink(RenderOptions options)
+        {
+        }
 
-    public interface CloudeoService
-    {
-    }
-
-    public interface CloudeoServiceListener
-    {
-    }
-
-    public interface Responder
-    {
     }
 }
