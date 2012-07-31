@@ -32,6 +32,8 @@ namespace CDO
 {
 
    
+    public delegate void ResultHandler<T>(T result);
+    public delegate void ErrHandler(int errCode, string errMessage);
 
     public class Platform
     {
@@ -54,24 +56,31 @@ namespace CDO
             return null;
         }
 
-        public void init(PlatformInitListener listener)
+        public static void init(PlatformInitListener listener)
         {
             //Perform platform initialization
         }
 
-        public void release()
+        public static void release()
         {
             // dispose the platform
         }
 
 
-        public CloudeoService getService()
+        public static CloudeoService getService()
         {
             return null;
         }
 
-        public void renderSink(RenderOptions options)
+        public static void renderSink(RenderOptions options)
         {
+        }
+
+
+
+        public static Responder<T> createResponder<T>(ResultHandler<T> rh=null, ErrHandler errH=null)
+        {
+            return new ResponderAdapter<T>(rh, errH);
         }
 
     }
