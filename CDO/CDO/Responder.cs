@@ -14,12 +14,12 @@ namespace CDO
         /**
          * 
          */
-        public void resultHandler(T result);
+        void resultHandler(T result);
 
         /**
          * 
          */
-        public void errHandler(int errCode, string errMessage);
+        void errHandler(int errCode, string errMessage);
 
     }
 

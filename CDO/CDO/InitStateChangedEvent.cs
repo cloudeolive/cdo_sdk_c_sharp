@@ -32,7 +32,7 @@ namespace CDO
 
         public int errCode
         {
-            get { return this._errCode}
+            get { return this._errCode; }
         }
 
         public string errMessage

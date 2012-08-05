@@ -1,10 +1,10 @@
 ﻿
 namespace CDO
 {
-    interface PlatformInitListener
+    public interface PlatformInitListener
     {
-        public void onInitProgressChanged(InitProgressChangedEvent e);
+         void onInitProgressChanged(InitProgressChangedEvent e);
 
-        public void onInitProgronInitStateChanged(InitStateChangedEvent e);
+         void onInitProgronInitStateChanged(InitStateChangedEvent e);
     }
 }

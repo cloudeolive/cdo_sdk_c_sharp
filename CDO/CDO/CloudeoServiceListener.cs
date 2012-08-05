@@ -43,27 +43,27 @@ namespace CDO
         // implement getters here
     }
 
-    class MessageEvent
+    public class MessageEvent
     {
         private long _srcUserId;
         private string data;
         // implement getters here
     }
 
-    class MicActivityEvent
+    public class MicActivityEvent
     {
         private int _activity;
         // implement getters here
     }
 
 
-    class MicGainEvent
+    public class MicGainEvent
     {
         private int _gain;
         // implement getters here
     }
 
-    class VideoFrameSizeChangedEvent
+    public class VideoFrameSizeChangedEvent
     {
         private string _sinkId;
         private int _width;
@@ -91,18 +91,16 @@ namespace CDO
 
     public interface CloudeoServiceListener
     {
-
-        public void onConnectionLost(ConnectionLostEvent e);
-        public void onDeviceListChanged(DeviceListChangedEvent e);
-        public void onMediaConnTypeChanged(MediaConnTypeChangedEvent e);
-        public void onMediaStats(MediaStatsEvent e);
-        public void onMediaStreamEvent(UserStateChangedEvent e);
-        public void onMessage(MessageEvent e);
-        public void onMicActivity(MicActivityEvent e);
-        public void onMicGain(MicGainEvent e);
-        public void onUserEvent(UserStateChangedEvent e);
-        public void onVideoFrameSizeChanged(VideoFrameSizeChangedEvent e);
-
+        void onConnectionLost(ConnectionLostEvent e);
+        void onDeviceListChanged(DeviceListChangedEvent e);
+        void onMediaConnTypeChanged(MediaConnTypeChangedEvent e);
+        void onMediaStats(MediaStatsEvent e);
+        void onMediaStreamEvent(UserStateChangedEvent e);
+        void onMessage(MessageEvent e);
+        void onMicActivity(MicActivityEvent e);
+        void onMicGain(MicGainEvent e);
+        void onUserEvent(UserStateChangedEvent e);
+        void onVideoFrameSizeChanged(VideoFrameSizeChangedEvent e);
     }
 
 

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudeoSdkWrapper.cs" />
     <Compile Include="CloudeoService.cs" />
     <Compile Include="CloudeoServiceListener.cs" />
     <Compile Include="ConnectionDescription.cs" />
@@ -55,6 +56,13 @@
     <Compile Include="Responder.cs" />
     <Compile Include="ScreenCaptureSource.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="cdo_sdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="cloudeo_sdk.h" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

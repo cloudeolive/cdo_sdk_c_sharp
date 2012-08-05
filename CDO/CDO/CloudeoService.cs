@@ -8,49 +8,49 @@ namespace CDO
 
     public interface CloudeoService
     {
-        public void getVersion(Responder<string> responder);
+        void getVersion(Responder<string> responder);
 
-        public void addServiceListener(Responder<Object> responder, CloudeoServiceListener listener);
+        void addServiceListener(Responder<Object> responder, CloudeoServiceListener listener);
 
 
-        public void getAudioCaptureDevice(Responder<string> respodner);
-        public void getAudioCaptureDeviceNames(Responder<Dictionary<string,string>> responder);
-        public void setAudioCaptureDevice(Responder<Object> responder, string deviceId);
+        void getAudioCaptureDevice(Responder<string> respodner);
+        void getAudioCaptureDeviceNames(Responder<Dictionary<string,string>> responder);
+        void setAudioCaptureDevice(Responder<Object> responder, string deviceId);
         
-        public void getAudioOutputDevice(Responder<string> respodner);
-        public void getAudioOutputDeviceNames(Responder<Dictionary<string,string>> responder);
-        public void setAudioOutputDevice(Responder<Object> responder, string deviceId);
+        void getAudioOutputDevice(Responder<string> respodner);
+        void getAudioOutputDeviceNames(Responder<Dictionary<string,string>> responder);
+        void setAudioOutputDevice(Responder<Object> responder, string deviceId);
 
-        public void getVideoCaptureDevice(Responder<string> respodner);
-        public void getVideoCaptureDeviceNames(Responder<Dictionary<string, string>> responder);
-        public void setVideoCaptureDevice(Responder<Object> responder, string deviceId);
+        void getVideoCaptureDevice(Responder<string> respodner);
+        void getVideoCaptureDeviceNames(Responder<Dictionary<string, string>> responder);
+        void setVideoCaptureDevice(Responder<Object> responder, string deviceId);
 
-        public void getScreenCaptureSources(Responder<List<ScreenCaptureSource>> responder, int thumbWidth);
+        void getScreenCaptureSources(Responder<List<ScreenCaptureSource>> responder, int thumbWidth);
 
-        // public void getHostCpuDetails();
+        // void getHostCpuDetails();
 
-        public void startLocalVideo(Responder<string> responder);
-        public void stopLocalVideo(Responder<Object> responder);
+        void startLocalVideo(Responder<string> responder);
+        void stopLocalVideo(Responder<Object> responder);
 
 
-        public void connect(Responder<Object> responder, ConnectionDescription connDescription);
-        public void disconnect(Responder<Object> responder, string scopeId);
-        public void publish(Responder<Object> responder, string scopeId, MediaType mediaType, MediaPublishOptions options);
-        public void unpublish(Responder<Object> responder, string scopeId, MediaType mediaType);
+        void connect(Responder<Object> responder, ConnectionDescription connDescription);
+        void disconnect(Responder<Object> responder, string scopeId);
+        void publish(Responder<Object> responder, string scopeId, MediaType mediaType, MediaPublishOptions options);
+        void unpublish(Responder<Object> responder, string scopeId, MediaType mediaType);
 
-        public void sendMessage(Responder<Object> responder, string scopeId, string message, long targetUserId = null);
+        void sendMessage(Responder<Object> responder, string scopeId, string message, long targetUserId);
 
-        public void getMicrophoneVolume(Responder<int> responder);
-        public void getSpeakersVolume(Responder<int> responder);
-        public void monitorMicActivity(Responder<Object> responder, bool enabled);
-        public void setMicrophoneVolume(Responder<Object> responder, int volume);
-        public void setSpeakersVolume(Responder<Object> responder, int volume);
+        void getMicrophoneVolume(Responder<int> responder);
+        void getSpeakersVolume(Responder<int> responder);
+        void monitorMicActivity(Responder<Object> responder, bool enabled);
+        void setMicrophoneVolume(Responder<Object> responder, int volume);
+        void setSpeakersVolume(Responder<Object> responder, int volume);
         
-        public void startMeasuringStatistics(Responder<Object> responder);
-        public void stopMeasuringStatistics(Responder<Object> responder);
+        void startMeasuringStatistics(Responder<Object> responder);
+        void stopMeasuringStatistics(Responder<Object> responder);
         
-        public void startPlayingTestSound(Responder<Object> responder);
-        public void stopPlayingTestSound(Responder<Object> responder);
+        void startPlayingTestSound(Responder<Object> responder);
+        void stopPlayingTestSound(Responder<Object> responder);
 
     }
 }

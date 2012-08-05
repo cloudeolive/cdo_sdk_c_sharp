@@ -19,9 +19,9 @@ namespace CDO
         //private SomethingThatWillContainThePicture _image;
 
 
-        public string id { get { return this._id} }
+        public string id { get { return this._id; } }
 
-        public string title { get { return this._title} }
+        public string title { get { return this._title; } }
 
 
 

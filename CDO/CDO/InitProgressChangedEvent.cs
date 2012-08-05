@@ -6,7 +6,7 @@ namespace CDO
      * 
      * 
      */ 
-    class InitProgressChangedEvent
+    public class InitProgressChangedEvent
     {
 
         
