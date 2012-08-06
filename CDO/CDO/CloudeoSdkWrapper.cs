@@ -30,6 +30,7 @@ namespace CDO
         public class CDOError
         {
             public int err_code;
+            
             public CDOString err_message;
         }
 
@@ -95,6 +96,7 @@ namespace CDO
          * =============================================================================
          */
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void invalidate_clbck_t(IntPtr opaque);
 
         /**
@@ -281,26 +283,37 @@ namespace CDO
         }
 
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_video_frame_size_changed_clbck_t(IntPtr opaque, ref CDOVideoFrameSizeChangedEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_connection_lost_clbck_t(IntPtr opaque, ref CDOConnectionLostEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_user_event_clbck_t(IntPtr opaque, ref CDOUserStateChangedEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_media_stream_clbck_t(IntPtr opaque, ref CDOUserStateChangedEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_mic_activity_clbck_t(IntPtr opaque, ref CDOMicActivityEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_mic_gain_clbck_t(IntPtr opaque, ref CDOMicGainEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_device_list_changed_clbck_t(IntPtr opaque, ref CDODeviceListChangedEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_media_stats_clbck_t(IntPtr opaque, ref CDOMediaStatsEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_message_clbck_t(IntPtr opaque, ref CDOMessageEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_media_conn_type_changed_clbck_t(IntPtr opaque, ref CDOMediaConnTypeChangedEvent e);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void on_echo_clbck_t(IntPtr opaque, ref CDOEchoEvent e);
 
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
@@ -339,13 +352,16 @@ namespace CDO
         }
 
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool cdo_no_error(ref CDOError error);
 
 
         /**
          */
-        public delegate void cdo_platform_init_done_clbck(IntPtr ptr, ref CDOError error, CDOH h);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void cdo_platform_init_done_clbck(IntPtr ptr, ref CDOError err, CDOH h);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_platform_init_progress_clbck(IntPtr ptr, short sh);
 
 
@@ -355,10 +371,10 @@ namespace CDO
          * @param initializationOptions
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_init_platform(cdo_platform_init_done_clbck resultCallback, ref CDOInitOptions initializationOptions, IntPtr opaque);
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_release_platform(CDOH handle);
 
         /**
@@ -367,12 +383,24 @@ namespace CDO
          * =============================================================================
          */
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void void_rclbck_t(ref CDOString str);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_void_rclbck_t(IntPtr opaque, ref CDOError error);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void cdo_void_rclbck_t2(IntPtr opaque, IntPtr error);
+
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_string_rclbck_t(IntPtr opaque, ref CDOError error, ref CDOString str);
+        
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_int_rclbck_t(IntPtr opaque, ref CDOError error, int i);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_get_device_names_rclbck_t(IntPtr opaque, ref CDOError error, ref CDODevice device, UIntPtr size_t);
-
-
 
 
         /**
@@ -383,13 +411,13 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_version(cdo_string_rclbck_t resultHandler, CDOH handle, IntPtr opaque);
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_add_service_listener(cdo_void_rclbck_t resultHandler, CDOH handle, IntPtr opaque, ref CDOServiceListener listener);
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_send_echo_notification(cdo_void_rclbck_t resultHandler, CDOH handle, IntPtr opaque, ref CDOString content);
 
         //=====================================================================
@@ -402,7 +430,7 @@ namespace CDO
          * @param handle platform handle
          * @param opaque PIMPL pointer
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_video_capture_device_names(cdo_get_device_names_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
 
@@ -414,7 +442,7 @@ namespace CDO
          * @param opaque
          * @param device_id
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_set_video_capture_device(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString device_id);
 
         /**
@@ -423,7 +451,7 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_video_capture_device(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
         //=============================================================================
@@ -436,7 +464,7 @@ namespace CDO
          * @param handle platform handle
          * @param opaque PIMPL pointer
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_audio_capture_device_names(cdo_get_device_names_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
 
@@ -448,7 +476,7 @@ namespace CDO
          * @param opaque
          * @param device_id
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_set_audio_capture_device(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString device_id);
 
         /**
@@ -457,7 +485,7 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_audio_capture_device(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
         //============================================================================
@@ -470,7 +498,7 @@ namespace CDO
          * @param handle platform handle
          * @param opaque PIMPL pointer
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_audio_output_device_names(cdo_get_device_names_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
 
@@ -482,7 +510,7 @@ namespace CDO
          * @param opaque
          * @param device_id
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_set_audio_output_device(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString device_id);
 
         /**
@@ -491,7 +519,7 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_audio_output_device(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
         //========================================================================
@@ -503,7 +531,7 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_start_local_video(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
 
@@ -513,7 +541,7 @@ namespace CDO
          * @param handle
          * @param opaque
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_stop_local_video(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
         //============================================================
@@ -526,7 +554,7 @@ namespace CDO
          * @param opaque
          * @param connDescr
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_connect(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOConnectionDescriptor connDescr);
 
         /**
@@ -536,13 +564,13 @@ namespace CDO
          * @param opaque
          * @param scopeId
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_disconnect(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString scopeId);
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_publish(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString scopeId, ref CDOString what, ref CDOMediaPublishOptions options);
 
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_unpublish(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString scopeId, ref CDOString what);
 
         //=========================================================
@@ -553,14 +581,14 @@ namespace CDO
          * @param request
          * @return
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_render_sink(cdo_int_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDORenderRequest request);
 
         /**
          *
          * @param rendererId
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_stop_render(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, int rendererId);
 
         /**
@@ -568,7 +596,7 @@ namespace CDO
          * @param request
          * @return
          */
-        [DllImport("cdo_sdk.dll")]
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_draw(CDOH handle, ref CDODrawRequest request);
     }
 }
