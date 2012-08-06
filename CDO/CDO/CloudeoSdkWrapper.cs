@@ -27,10 +27,10 @@ namespace CDO
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
-        public class CDOError
+        public struct CDOError
         {
             public int err_code;
-            
+            //[MarshalAs(UnmanagedType.LPStruct)]
             public CDOString err_message;
         }
 
