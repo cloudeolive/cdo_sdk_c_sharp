@@ -51,6 +51,5 @@ namespace CDO
         
         void startPlayingTestSound(Responder<Object> responder);
         void stopPlayingTestSound(Responder<Object> responder);
-
     }
 }

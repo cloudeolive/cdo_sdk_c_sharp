@@ -12,22 +12,22 @@ namespace CDO
         /**
          * 
          */ 
-        public int maxWidth;
+        public uint maxWidth;
         
         /**
          * 
          */ 
-        public int maxHeight;
+        public uint maxHeight;
         
         /**
          * 
          */ 
-        public int maxBitRate;
+        public uint maxBitRate;
         
         /**
          * 
          */ 
-        public int maxFps;
+        public uint maxFps;
         
         /**
          * 
@@ -38,6 +38,18 @@ namespace CDO
          * 
          */ 
         public bool receive;
+
+        internal static CloudeoSdkWrapper.VideoStreamDescriptor toNative(VideoStreamDescription videoStreamDescription)
+        {
+            CloudeoSdkWrapper.VideoStreamDescriptor videoDescr = new CloudeoSdkWrapper.VideoStreamDescriptor();
+            videoDescr.maxWidth = videoStreamDescription.maxWidth;
+            videoDescr.maxHeight = videoStreamDescription.maxHeight;
+            videoDescr.maxBitRate = videoStreamDescription.maxBitRate;
+            videoDescr.maxFps = videoStreamDescription.maxFps;
+            videoDescr.publish = videoStreamDescription.publish;
+            videoDescr.receive = videoStreamDescription.receive;
+            return videoDescr;
+        }
     }
 
     public class ConnectionDescription
@@ -83,5 +95,18 @@ namespace CDO
          * 
          */ 
         public string token;
+
+
+        internal static CloudeoSdkWrapper.CDOConnectionDescriptor toNative(ConnectionDescription connectionDescription)
+        {
+            CloudeoSdkWrapper.CDOConnectionDescriptor connDescr = new CloudeoSdkWrapper.CDOConnectionDescriptor();
+            connDescr.highVideoStream = VideoStreamDescription.toNative(connectionDescription.highVideoStream);
+            connDescr.lowVideoStream = VideoStreamDescription.toNative(connectionDescription.lowVideoStream);
+            connDescr.autopublishAudio = connectionDescription.autopublishAudio;
+            connDescr.autopublishVideo = connectionDescription.autopublishVideo;
+            connDescr.url = StringHelper.toNative(connectionDescription.url);
+            
+            return connDescr;
+        }
     }
 }

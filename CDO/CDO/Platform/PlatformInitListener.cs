@@ -5,6 +5,8 @@ namespace CDO
     {
          void onInitProgressChanged(InitProgressChangedEvent e);
 
-         void onInitProgronInitStateChanged(InitStateChangedEvent e);
+         void onInitStateChanged(InitStateChangedEvent e);
     }
+
+    
 }

@@ -5,7 +5,7 @@ using System;
 namespace CDO
 {
     using CDOH = IntPtr;
-    public class CloudeoSdkWrapper
+    internal class CloudeoSdkWrapper
     {
         /**
          * =============================================================================

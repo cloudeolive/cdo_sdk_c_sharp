@@ -1,29 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace CDO
 {
-
-    public enum InitState
-    {
-        INITIALIZED,ERROR
-    }
-
     public class InitStateChangedEvent
     {
+        public enum InitState { INITIALIZED, ERROR }
 
         private InitState _state;
         private int _errCode;
         private string _errMessage;
-
-        public InitStateChangedEvent(InitState state, int errCode, string errMessage)
-        {
-            this._state = state;
-            this._errCode = errCode;
-            this._errMessage = errMessage;
-        }
 
         public InitState state
         {
@@ -40,5 +24,11 @@ namespace CDO
             get { return this._errMessage; }
         }
 
+        public InitStateChangedEvent(InitState state, int errCode, string errMessage)
+        {
+            this._state = state;
+            this._errCode = errCode;
+            this._errMessage = errMessage;
+        }
     }
 }

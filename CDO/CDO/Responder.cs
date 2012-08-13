@@ -5,37 +5,25 @@ using System.Text;
 
 namespace CDO
 {
-
-    /**
-     * 
-     */
     public interface Responder<T>
     {
-        /**
-         * 
-         */
         void resultHandler(T result);
-
-        /**
-         * 
-         */
         void errHandler(int errCode, string errMessage);
-
     }
-
 
 
     public class ResponderAdapter<T> : Responder<T>
     {
-
         private ResultHandler<T> _rHandler;
         private ErrHandler _errHandler;
+
 
         public ResponderAdapter(ResultHandler<T> rHandler=null, ErrHandler errHandler=null)
         {
             this._rHandler = rHandler;
             this._errHandler = errHandler;
         }
+
 
         public void resultHandler(T result)
         {
@@ -53,9 +41,5 @@ namespace CDO
                 this._errHandler(errCode, errMessage);
             }
         }
-
- 
     }
-
-
 }

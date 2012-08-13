@@ -81,6 +81,10 @@
       <Project>{AA919665-EFA2-4CB8-8106-63353D7C64BE}</Project>
       <Name>CDO</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cdo_Sdk\Cdo_Sdk.csproj">
+      <Project>{2AF20684-BFA8-42B1-91CF-22A0851484F9}</Project>
+      <Name>Cdo_Sdk</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
