@@ -255,17 +255,17 @@ namespace CDO
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
         public struct CDOMediaStatsEvent
         {
-            CDOString scopeId;
-            CDOString mediaType;
-            Int64 remoteUserId;
-            CDOMediaStats stats;
+            public CDOString scopeId;
+            public CDOString mediaType;
+            public Int64 remoteUserId;
+            public CDOMediaStats stats;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
         public struct CDOMessageEvent
         {
             public CDOString data;
-            Int64 srcUserId;
+            public Int64 srcUserId;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
@@ -319,18 +319,29 @@ namespace CDO
         [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
         public struct CDOServiceListener
         {
-            IntPtr opaque;
-            on_video_frame_size_changed_clbck_t onVideoFrameSizeChanged;
-            on_connection_lost_clbck_t onConnectionLost;
-            on_user_event_clbck_t onUserEvent;
-            on_media_stream_clbck_t onMediaStreamEvent;
-            on_mic_activity_clbck_t onMicActivity;
-            on_mic_gain_clbck_t onMicGain;
-            on_device_list_changed_clbck_t onDeviceListChanged;
-            on_media_stats_clbck_t onMediaStats;
-            on_message_clbck_t onMessage;
-            on_media_conn_type_changed_clbck_t onMediaConnTypeChanged;
-            on_echo_clbck_t onEcho;
+            public IntPtr opaque;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_video_frame_size_changed_clbck_t onVideoFrameSizeChanged;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_connection_lost_clbck_t onConnectionLost;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_user_event_clbck_t onUserEvent;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_media_stream_clbck_t onMediaStreamEvent;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_mic_activity_clbck_t onMicActivity;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_mic_gain_clbck_t onMicGain;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_device_list_changed_clbck_t onDeviceListChanged;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_media_stats_clbck_t onMediaStats;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_message_clbck_t onMessage;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_media_conn_type_changed_clbck_t onMediaConnTypeChanged;
+            [MarshalAs(UnmanagedType.FunctionPtr)]
+            public on_echo_clbck_t onEcho;
         } 
 
         /**
@@ -384,14 +395,7 @@ namespace CDO
          */
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void void_rclbck_t(ref CDOString str);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_void_rclbck_t(IntPtr opaque, ref CDOError error);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void cdo_void_rclbck_t2(IntPtr opaque, IntPtr error);
-
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void cdo_string_rclbck_t(IntPtr opaque, ref CDOError error, ref CDOString str);
@@ -400,7 +404,7 @@ namespace CDO
         public delegate void cdo_int_rclbck_t(IntPtr opaque, ref CDOError error, int i);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void cdo_get_device_names_rclbck_t(IntPtr opaque, ref CDOError error, ref CDODevice device, UIntPtr size_t);
+        public delegate void cdo_get_device_names_rclbck_t(IntPtr opaque, ref CDOError error, /*CDODevice*/IntPtr device, UIntPtr resultListLen);
 
 
         /**
@@ -522,6 +526,18 @@ namespace CDO
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_audio_output_device(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_start_playing_test_sound(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_stop_playing_test_sound(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_set_volume(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, int volume);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_get_volume(cdo_int_rclbck_t rclbck, CDOH handle, IntPtr opaque);
+
         //========================================================================
         //=============== Local preview management ===============================
         //========================================================================
@@ -533,7 +549,6 @@ namespace CDO
          */
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_start_local_video(cdo_string_rclbck_t rclbck, CDOH handle, IntPtr opaque);
-
 
         /**
          *
@@ -572,6 +587,9 @@ namespace CDO
 
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_unpublish(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString scopeId, ref CDOString what);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_send_message(cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, ref CDOString scopeId, [MarshalAs(UnmanagedType.LPStr)]string msgBody, UIntPtr msgSize, ref Int64 recipientId);
 
         //=========================================================
         //=============== Rendering ===============================

@@ -46,6 +46,8 @@ namespace CDO
         private static CloudeoSdkWrapper.cdo_platform_init_done_clbck _init_done_callback;
         private static CloudeoSdkWrapper.cdo_platform_init_progress_clbck _init_progress_callback;
 
+        private static CloudeoSdkWrapper.cdo_int_rclbck_t _int_result_callback;
+
         #endregion
 
 
@@ -54,11 +56,12 @@ namespace CDO
         /**
          * Singleton!
          */
-        private Platform()
+        static Platform()
         {
             _platformHandle = IntPtr.Zero;
-            CloudeoSdkWrapper.cdo_platform_init_done_clbck _init_done_callback = new CloudeoSdkWrapper.cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
-            CloudeoSdkWrapper.cdo_platform_init_progress_clbck _init_progress_callback = new CloudeoSdkWrapper.cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
+            _init_done_callback = new CloudeoSdkWrapper.cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
+            _init_progress_callback = new CloudeoSdkWrapper.cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
+            _int_result_callback = new CloudeoSdkWrapper.cdo_int_rclbck_t(cdo_int_result_callback);
         }
 
         ~Platform() { release(); }
@@ -85,7 +88,7 @@ namespace CDO
             _listener = listener;
 
             //Perform platform initialization
-            string path = "C:\\Users\\Pawel\\AppData\\LocalLow\\Cloudeo\\1.16.2.1";     //TODO: probably shouldn't be hardcoded
+            string path = "C:\\Users\\Pawel\\AppData\\LocalLow\\Cloudeo\\1.16.3.0";     //TODO: probably shouldn't be hardcoded
             CloudeoSdkWrapper.CDOString str = new CloudeoSdkWrapper.CDOString();
             str.body = path;
             str.length = (UInt32)path.Length;
@@ -134,6 +137,11 @@ namespace CDO
         public static void renderSink(RenderOptions options) 
         { 
             /*TODO: implement method*/ 
+        }
+
+        private static void cdo_int_result_callback(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, int i)
+        {
+            // TODO: renderSink responder ?
         }
 
         // *****************************************************************

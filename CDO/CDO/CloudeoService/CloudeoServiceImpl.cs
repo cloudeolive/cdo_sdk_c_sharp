@@ -1,6 +1,8 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 namespace CDO
 {
     internal class CloudeoServiceImpl : CloudeoService
@@ -11,13 +13,12 @@ namespace CDO
         private Dictionary<uint, object> _respondersDictionary;
         private uint _enumarator;
 
-
-        private CloudeoSdkWrapper.void_rclbck_t _void_result_callback_t;
         private CloudeoSdkWrapper.cdo_void_rclbck_t _cdo_void_result_callback_t;
-        private CloudeoSdkWrapper.cdo_void_rclbck_t2 _cdo_void_result_callback_t2;
         private CloudeoSdkWrapper.cdo_string_rclbck_t _cdo_string_result_callback_t;
         private CloudeoSdkWrapper.cdo_int_rclbck_t _cdo_int_result_callback_t;
         private CloudeoSdkWrapper.cdo_get_device_names_rclbck_t _cdo_get_device_names_result_callback_t;
+
+        private CloudeoServiceListener _cloudeoServiceListener;
 
         private CloudeoSdkWrapper.on_video_frame_size_changed_clbck_t _on_video_frame_size_changed_callback_t;
         private CloudeoSdkWrapper.on_connection_lost_clbck_t _on_connection_lost_callback_t;
@@ -53,9 +54,7 @@ namespace CDO
             _respondersDictionary = new Dictionary<uint, object>();
             _enumarator = 0;
 
-            _void_result_callback_t = new CloudeoSdkWrapper.void_rclbck_t(void_result_callback_t);
             _cdo_void_result_callback_t = new CloudeoSdkWrapper.cdo_void_rclbck_t(cdo_void_result_callback_t);
-            _cdo_void_result_callback_t2 = new CloudeoSdkWrapper.cdo_void_rclbck_t2(cdo_void_result_callback_t2);
             _cdo_string_result_callback_t = new CloudeoSdkWrapper.cdo_string_rclbck_t(cdo_string_result_callback_t);
             _cdo_int_result_callback_t = new CloudeoSdkWrapper.cdo_int_rclbck_t(cdo_int_result_callback_t);
             _cdo_get_device_names_result_callback_t = new CloudeoSdkWrapper.cdo_get_device_names_rclbck_t(cdo_get_device_names_result_callback_t);
@@ -76,12 +75,13 @@ namespace CDO
         #endregion
 
 
-        #region Method
+        #region Methods
 
         private uint saveResponder(object responder)
         {
-            _respondersDictionary.Add(_enumarator++, responder);
-            return _enumarator;
+            _respondersDictionary.Add(_enumarator, responder);
+            _enumarator++;
+            return _enumarator - 1;
         }
 
         private object getResponder(uint id)
@@ -116,7 +116,28 @@ namespace CDO
 
         public void addServiceListener(Responder<object> responder, CloudeoServiceListener listener)
         {
-            //TODO: implement method
+            _cloudeoServiceListener = listener;
+            CloudeoSdkWrapper.CDOServiceListener lstnr = new CloudeoSdkWrapper.CDOServiceListener();
+            lstnr.opaque = IntPtr.Zero;
+            lstnr.onConnectionLost = _on_connection_lost_callback_t;
+            lstnr.onDeviceListChanged = _on_device_list_changed_callback_t;
+            lstnr.onEcho = _on_echo_callback_t;
+            lstnr.onMediaConnTypeChanged = _on_media_conn_type_changed_callback_t;
+            lstnr.onMediaStats = _on_media_stats_callback_t;
+            lstnr.onMediaStreamEvent = _on_media_stream_callback_t;
+            lstnr.onMessage = _on_message_callback_t;
+            lstnr.onMicActivity = _on_mic_activity_callback_t;
+            lstnr.onMicGain = _on_mic_gain_callback_t;
+            lstnr.onUserEvent = _on_user_event_callback_t;
+            lstnr.onVideoFrameSizeChanged = _on_video_frame_size_changed_callback_t;
+            CloudeoSdkWrapper.cdo_add_service_listener(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)), ref lstnr);
+        }
+
+
+        public void sendEchoNotification(Responder<object> responder, string content)
+        {
+            CloudeoSdkWrapper.CDOString cont = StringHelper.toNative(content);
+            CloudeoSdkWrapper.cdo_send_echo_notification(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)), ref cont);
         }
 
 
@@ -166,13 +187,14 @@ namespace CDO
 
         public void setVideoCaptureDevice(Responder<object> responder, string deviceId)
         {
-            CloudeoSdkWrapper.cdo_get_video_capture_device(_cdo_string_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)));
+            CloudeoSdkWrapper.CDOString devId = StringHelper.toNative(deviceId);
+            CloudeoSdkWrapper.cdo_set_video_capture_device(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)), ref devId);
         }
 
 
         public void getScreenCaptureSources(Responder<System.Collections.Generic.List<ScreenCaptureSource>> responder, int thumbWidth)
         {
-            // TODO: I can't find corresponding function in CloudeoSdkWrapper
+            // TODO: implement in future
         }
 
 
@@ -217,55 +239,57 @@ namespace CDO
 
         public void sendMessage(Responder<object> responder, string scopeId, string message, long targetUserId)
         {
-            // TODO: implement mentod
+            CloudeoSdkWrapper.CDOString scpId = StringHelper.toNative(scopeId);
+            UIntPtr msgSz = new UIntPtr((message != null) ? (uint)message.Length : 0u);
+            CloudeoSdkWrapper.cdo_send_message(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)), ref scpId, message, msgSz, ref targetUserId);
         }
 
 
         public void getMicrophoneVolume(Responder<int> responder)
         {
-            // TODO: implement mentod
-        }
-
-        public void getSpeakersVolume(Responder<int> responder)
-        {
-            // TODO: implement mentod
+            // TODO: implement in future
         }
 
         public void monitorMicActivity(Responder<object> responder, bool enabled)
         {
-            // TODO: implement mentod
+            // TODO: implement in future
         }
 
         public void setMicrophoneVolume(Responder<object> responder, int volume)
         {
-            // TODO: implement mentod
+            // TODO: implement in future
+        }
+
+        public void getSpeakersVolume(Responder<int> responder)
+        {
+            CloudeoSdkWrapper.cdo_get_volume(_cdo_int_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)));
         }
 
         public void setSpeakersVolume(Responder<object> responder, int volume)
         {
-            // TODO: implement mentod
+            CloudeoSdkWrapper.cdo_set_volume(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)), volume);
         }
 
 
         public void startMeasuringStatistics(Responder<object> responder)
         {
-            // TODO: implement mentod
+            // TODO: implement in future
         }
 
         public void stopMeasuringStatistics(Responder<object> responder)
         {
-            // TODO: implement mentod
+            // TODO: implement in future
         }
 
 
         public void startPlayingTestSound(Responder<object> responder)
         {
-            // TODO: implement mentod
+            CloudeoSdkWrapper.cdo_start_playing_test_sound(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)));
         }
 
         public void stopPlayingTestSound(Responder<object> responder)
         {
-            // TODO: implement mentod
+            CloudeoSdkWrapper.cdo_stop_playing_test_sound(_cdo_void_result_callback_t, _platformHandle, new IntPtr(saveResponder(responder)));
         }
 
         #endregion
@@ -273,90 +297,125 @@ namespace CDO
 
         #region CloudeoSdkWrapper callback handlers
 
-        private void void_result_callback_t(ref CloudeoSdkWrapper.CDOString str)
-        {
-
-        }
-
         private void cdo_void_result_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error)
         {
+            Responder<object> responder = (Responder<object>) getResponder((uint)opaque);
 
-        }
-
-        private void cdo_void_result_callback_t2(IntPtr opaque, IntPtr error)
-        {
-
+            if (error.err_code == 0)
+                responder.resultHandler(null);
+            else
+                responder.errHandler(error.err_code, error.err_message.body);
         }
 
         private void cdo_string_result_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, ref CloudeoSdkWrapper.CDOString str)
         {
+            Responder<string> responder = (Responder<string>)getResponder((uint)opaque);
 
+            if (error.err_code == 0)
+                responder.resultHandler(str.body);
+            else
+                responder.errHandler(error.err_code, error.err_message.body);
         }
 
         private void cdo_int_result_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, int i)
         {
+            Responder<int> responder = (Responder<int>)getResponder((uint)opaque);
 
+            if (error.err_code == 0)
+                responder.resultHandler(i);
+            else
+                responder.errHandler(error.err_code, error.err_message.body);
         }
 
-        private void cdo_get_device_names_result_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, ref CloudeoSdkWrapper.CDODevice device, UIntPtr size_t)
+        private void cdo_get_device_names_result_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, IntPtr device, UIntPtr size_t)
         {
+            Responder<System.Collections.Generic.Dictionary<string, string>> responder = (Responder<System.Collections.Generic.Dictionary<string, string>>)getResponder((uint)opaque);
 
+            System.Collections.Generic.Dictionary<string, string> devList = new Dictionary<string,string>();
+
+            // 'device' is an array of 'CDODevice' structures, add devices to devList
+            var arrayValue = device;
+            var tableEntrySize = Marshal.SizeOf(typeof(CloudeoSdkWrapper.CDODevice));
+            uint tableSize = (uint)size_t;
+            for (var i = 0; i < tableSize; i++)
+            {
+                var cur = (CloudeoSdkWrapper.CDODevice)Marshal.PtrToStructure(arrayValue, typeof(CloudeoSdkWrapper.CDODevice));
+                devList.Add(cur.id.body, cur.label.body);
+                arrayValue = new IntPtr(arrayValue.ToInt32() + tableEntrySize);
+            }
+
+
+            if (error.err_code == 0)
+                responder.resultHandler(devList);
+            else
+                responder.errHandler(error.err_code, error.err_message.body);
         }
 
+        // CDOServiceListener callback handlers
 
         private void on_video_frame_size_changed_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOVideoFrameSizeChangedEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onVideoFrameSizeChanged(VideoFrameSizeChangedEvent.FromNative(e));
         }
 
         private void on_connection_lost_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOConnectionLostEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onConnectionLost(ConnectionLostEvent.FromNative(e));
         }
 
         private void on_user_event_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOUserStateChangedEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onUserEvent(UserStateChangedEvent.FromNative(e));
         }
 
         private void on_media_stream_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOUserStateChangedEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMediaStreamEvent(UserStateChangedEvent.FromNative(e));
         }
 
         private void on_mic_activity_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOMicActivityEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMicActivity(MicActivityEvent.FromNative(e));
         }
 
         private void on_mic_gain_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOMicGainEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMicGain(MicGainEvent.FromNative(e));
         }
 
         private void on_device_list_changed_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDODeviceListChangedEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onDeviceListChanged(DeviceListChangedEvent.FromNative(e));
         }
 
         private void on_media_stats_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOMediaStatsEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMediaStats(MediaStatsEvent.FromNative(e));
         }
 
         private void on_message_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOMessageEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMessage(MessageEvent.FromNative(e));
         }
 
         private void on_media_conn_type_changed_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOMediaConnTypeChangedEvent e)
         {
-
+            if (_cloudeoServiceListener != null)
+                _cloudeoServiceListener.onMediaConnTypeChanged(MediaConnTypeChangedEvent.FromNative(e));
         }
 
         private void on_echo_callback_t(IntPtr opaque, ref CloudeoSdkWrapper.CDOEchoEvent e)
         {
-
+            // TODO: implement maybe later
         }
 
         #endregion

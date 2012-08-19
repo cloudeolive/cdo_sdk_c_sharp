@@ -12,6 +12,7 @@ namespace CDO
 
         void addServiceListener(Responder<Object> responder, CloudeoServiceListener listener);
 
+        void sendEchoNotification(Responder<Object> responder, string content);
 
         void getAudioCaptureDevice(Responder<string> respodner);
         void getAudioCaptureDeviceNames(Responder<Dictionary<string,string>> responder);
