@@ -29,10 +29,14 @@ For more information, please refer to <http://unlicense.org/>
  * 
  */
 using System;
+using System.Reflection;
+using System.IO;
 namespace CDO
 {
     public delegate void ResultHandler<T>(T result);
     public delegate void ErrHandler(int errCode, string errMessage);
+
+    
 
     public class Platform
     {
@@ -81,14 +85,45 @@ namespace CDO
         #endregion  
 
 
+        static private string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
         #region Methods
 
         public static void init(PlatformInitListener listener)
         {
+            init(listener, null);
+        }
+
+        public static void init(PlatformInitListener listener, PlatformInitOptions options)
+        {
             _listener = listener;
 
             //Perform platform initialization
-            string path = "C:\\Users\\Pawel\\AppData\\LocalLow\\Cloudeo\\1.16.3.0";     //TODO: probably shouldn't be hardcoded
+            string path;
+            if (options != null)
+            {
+                if (Path.IsPathRooted(options.sdkPath))
+                {
+                    path = options.sdkPath;
+                }
+                else
+                {
+                    path = AssemblyDirectory + options.sdkPath;                       
+                }
+            }
+            else
+            {
+                path = AssemblyDirectory + "\\cloudeo_sdk";
+            }
             CloudeoSdkWrapper.CDOString str = new CloudeoSdkWrapper.CDOString();
             str.body = path;
             str.length = (UInt32)path.Length;
@@ -153,5 +188,7 @@ namespace CDO
         }
 
         #endregion
+
+        public static object initOptions { get; set; }
     }
 }
