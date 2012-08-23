@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using CDO;
+using System.Threading;
 
 namespace CDOTest
 {
@@ -18,6 +19,30 @@ namespace CDOTest
             _service.getVersion(responder);
             Assert.IsTrue(awaitStringResult().Length > 4);
         }
+
+
+        [Test]
+        public void testStartStopLocalVideo()
+        {
+            // 1. Set proper video capture device
+            Dictionary<string, string> devs = null; ;
+            _service.getVideoCaptureDeviceNames(createDevsResponder());
+            devs = awaitDictResult();
+            Assert.IsTrue(devs.Count > 0);
+            _service.setVideoCaptureDevice(createVoidResponder(), devs.Keys.First());
+            awaitVoidResult();
+
+            // 2. Do the real test
+
+            _service.startLocalVideo(createStringResponder());
+            string sinkId = awaitStringResult();
+            Assert.That(sinkId.Length > 0);
+
+            Thread.Sleep(5000);
+            _service.stopLocalVideo(createVoidResponder());
+            awaitVoidResult();
+        }
+
 
     }
 }

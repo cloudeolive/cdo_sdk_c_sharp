@@ -26,14 +26,12 @@ namespace CDOTest
         [Test]
         public void testSetVideoCaptureDevice()
         {
-            setUp();
             Dictionary<string, string> devs = null; ;
             _service.getVideoCaptureDeviceNames(createDevsResponder());
             devs = awaitDictResult();
             Assert.IsTrue(devs.Count > 0);
             _service.setVideoCaptureDevice(createVoidResponder(), devs.Keys.First());
             awaitVoidResult();
-            tearDown();
         }
 
 
@@ -66,14 +64,12 @@ namespace CDOTest
         [Test]
         public void testSetAudioCaptureDevice()
         {
-            setUp();
             Dictionary<string, string> devs = null; ;
             _service.getAudioCaptureDeviceNames(createDevsResponder());
             devs = awaitDictResult();
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioCaptureDevice(createVoidResponder(), devs.Keys.First());
             awaitVoidResult();
-            tearDown();
         }
 
 
@@ -105,14 +101,12 @@ namespace CDOTest
         [Test]
         public void testSetAudioOutputDevice()
         {
-            setUp();
             Dictionary<string, string> devs = null; ;
             _service.getAudioOutputDeviceNames(createDevsResponder());
             devs = awaitDictResult();
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioOutputDevice(createVoidResponder(), devs.Keys.First());
             awaitVoidResult();
-            tearDown();
         }
 
 
