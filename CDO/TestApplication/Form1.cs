@@ -236,5 +236,43 @@ namespace TestApplication
         }
 
         #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string url = connUrlTxtBox.Text;
+            ConnectionDescription connDescr = new ConnectionDescription();
+            connDescr.autopublishAudio = true;
+            connDescr.autopublishVideo = true;
+            connDescr.url = url;
+            connDescr.token = new Random().Next(1000) + "";
+            connDescr.lowVideoStream.maxBitRate = 32;
+            connDescr.lowVideoStream.maxWidth = 160;
+            connDescr.lowVideoStream.maxHeight = 120;
+            connDescr.lowVideoStream.maxFps = 5;
+            connDescr.lowVideoStream.publish = true;
+            connDescr.lowVideoStream.receive = true;
+
+            connDescr.highVideoStream.maxBitRate = 500;
+            connDescr.highVideoStream.maxWidth = 320;
+            connDescr.highVideoStream.maxHeight = 240;
+            connDescr.highVideoStream.maxFps = 15;
+            connDescr.highVideoStream.publish = true;
+            connDescr.highVideoStream.receive = true;
+            UpdateLogTB("Trying to establish the connection to the streamer with url: "+url+"\n");
+            _cloudeoService.connect(Platform.createResponder<object>(
+                delegate(object result) {
+                    UpdateLogTB("Successfully connected\n");
+                },
+                delegate(int errCode, string errMessage) {
+                    String.Format("Failed to connect: errCode={0}; errMessage={1};{2}", errCode, errMessage, Environment.NewLine);
+                }
+                ), connDescr); 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

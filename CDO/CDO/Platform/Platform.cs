@@ -47,10 +47,10 @@ namespace CDO
         private static IntPtr _platformHandle;
 
         private static PlatformInitListener _listener;
-        private static CloudeoSdkWrapper.cdo_platform_init_done_clbck _init_done_callback;
-        private static CloudeoSdkWrapper.cdo_platform_init_progress_clbck _init_progress_callback;
+        private static cdo_platform_init_done_clbck _init_done_callback;
+        private static cdo_platform_init_progress_clbck _init_progress_callback;
 
-        private static CloudeoSdkWrapper.cdo_int_rclbck_t _int_result_callback;
+        private static cdo_int_rclbck_t _int_result_callback;
 
         #endregion
 
@@ -63,9 +63,9 @@ namespace CDO
         static Platform()
         {
             _platformHandle = IntPtr.Zero;
-            _init_done_callback = new CloudeoSdkWrapper.cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
-            _init_progress_callback = new CloudeoSdkWrapper.cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
-            _int_result_callback = new CloudeoSdkWrapper.cdo_int_rclbck_t(cdo_int_result_callback);
+            _init_done_callback = new cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
+            _init_progress_callback = new cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
+            _int_result_callback = new cdo_int_rclbck_t(cdo_int_result_callback);
         }
 
         ~Platform() { release(); }
@@ -124,17 +124,17 @@ namespace CDO
             {
                 path = AssemblyDirectory + "\\cloudeo_sdk";
             }
-            CloudeoSdkWrapper.CDOString str = new CloudeoSdkWrapper.CDOString();
+            CDOString str = new CDOString();
             str.body = path;
             str.length = (UInt32)path.Length;
 
-            CloudeoSdkWrapper.CDOInitOptions initOptions = new CloudeoSdkWrapper.CDOInitOptions();
+            CDOInitOptions initOptions = new CDOInitOptions();
             initOptions.logicLibPath = str;
 
-            CloudeoSdkWrapper.cdo_init_platform(_init_done_callback, ref initOptions, IntPtr.Zero);
+            NativeAPI.cdo_init_platform(_init_done_callback, ref initOptions, IntPtr.Zero);
         }
 
-        private static void cdo_platform_init_done_callback(IntPtr ptr, ref CloudeoSdkWrapper.CDOError err, IntPtr h)
+        private static void cdo_platform_init_done_callback(IntPtr ptr, ref CDOError err, IntPtr h)
         {
             _platformHandle = h;
 
@@ -160,7 +160,7 @@ namespace CDO
         private static void release() 
         { 
             /* dispose the platform */
-            CloudeoSdkWrapper.cdo_release_platform(_platformHandle);
+            NativeAPI.cdo_release_platform(_platformHandle);
         }
 
 
@@ -174,7 +174,7 @@ namespace CDO
             /*TODO: implement method*/ 
         }
 
-        private static void cdo_int_result_callback(IntPtr opaque, ref CloudeoSdkWrapper.CDOError error, int i)
+        private static void cdo_int_result_callback(IntPtr opaque, ref CDOError error, int i)
         {
             // TODO: renderSink responder ?
         }

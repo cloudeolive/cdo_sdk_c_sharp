@@ -39,17 +39,6 @@ namespace CDO
          */ 
         public bool receive;
 
-        internal static CloudeoSdkWrapper.VideoStreamDescriptor toNative(VideoStreamDescription videoStreamDescription)
-        {
-            CloudeoSdkWrapper.VideoStreamDescriptor videoDescr = new CloudeoSdkWrapper.VideoStreamDescriptor();
-            videoDescr.maxWidth = videoStreamDescription.maxWidth;
-            videoDescr.maxHeight = videoStreamDescription.maxHeight;
-            videoDescr.maxBitRate = videoStreamDescription.maxBitRate;
-            videoDescr.maxFps = videoStreamDescription.maxFps;
-            videoDescr.publish = videoStreamDescription.publish;
-            videoDescr.receive = videoStreamDescription.receive;
-            return videoDescr;
-        }
     }
 
     public class ConnectionDescription
@@ -96,17 +85,36 @@ namespace CDO
          */ 
         public string token;
 
-
-        internal static CloudeoSdkWrapper.CDOConnectionDescriptor toNative(ConnectionDescription connectionDescription)
+        private string bool2JsonString(bool value)
         {
-            CloudeoSdkWrapper.CDOConnectionDescriptor connDescr = new CloudeoSdkWrapper.CDOConnectionDescriptor();
-            connDescr.highVideoStream = VideoStreamDescription.toNative(connectionDescription.highVideoStream);
-            connDescr.lowVideoStream = VideoStreamDescription.toNative(connectionDescription.lowVideoStream);
-            connDescr.autopublishAudio = connectionDescription.autopublishAudio;
-            connDescr.autopublishVideo = connectionDescription.autopublishVideo;
-            connDescr.url = StringHelper.toNative(connectionDescription.url);
-            
-            return connDescr;
+            return value ? "true" : "false";
         }
+
+        internal string toJSON()
+        {
+            string json = "";
+            json = "{" +
+                    "\"lowVideoStream\":" +
+                    "{" +
+                    "\"publish\":" + bool2JsonString(lowVideoStream.publish) +
+                    ",\"receive\":" + bool2JsonString(lowVideoStream.receive) +
+                    ",\"maxWidth\":" + lowVideoStream.maxWidth +
+                    ",\"maxHeight\":" + lowVideoStream.maxHeight +
+                    ",\"maxBitRate\":" + lowVideoStream.maxBitRate +
+                    ",\"maxFps\":" + lowVideoStream.maxFps + "}" +
+                    ",\"highVideoStream\":" +
+                    "{" +
+                    "\"publish\":" + bool2JsonString(highVideoStream.publish) +
+                    ",\"receive\":" + bool2JsonString(highVideoStream.receive) +
+                    ",\"maxWidth\":" + highVideoStream.maxWidth +
+                    ",\"maxHeight\":" + highVideoStream.maxHeight +
+                    ",\"maxBitRate\":" + highVideoStream.maxBitRate +
+                    ",\"maxFps\":" + highVideoStream.maxFps + "}" +
+                    ",\"autopublishVideo\":" + bool2JsonString(autopublishVideo) +
+                    ",\"autopublishAudio\":" + bool2JsonString(autopublishAudio) +
+                    ",\"url\":\"" + url + "\",\"token\":\"" + token + "\"}";
+            return json;
+        }
+
     }
 }

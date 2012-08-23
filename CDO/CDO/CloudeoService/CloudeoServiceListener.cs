@@ -15,7 +15,7 @@ namespace CDO
         public int ErrCode { get { return _errCode; } }
         public string ErrMessage { get { return _errMessage; } }
 
-        internal static ConnectionLostEvent FromNative(CloudeoSdkWrapper.CDOConnectionLostEvent connLostEvnt)
+        internal static ConnectionLostEvent FromNative(CDOConnectionLostEvent connLostEvnt)
         {
             ConnectionLostEvent result = new ConnectionLostEvent();
             result._scopeId = connLostEvnt.scopeId.body;
@@ -35,7 +35,7 @@ namespace CDO
         public bool VideoIn { get { return _videoIn; } }
         public bool AudioOut { get { return _audioOut; } }
 
-        internal static DeviceListChangedEvent FromNative(CloudeoSdkWrapper.CDODeviceListChangedEvent devListChangedEvnt)
+        internal static DeviceListChangedEvent FromNative(CDODeviceListChangedEvent devListChangedEvnt)
         {
             DeviceListChangedEvent result = new DeviceListChangedEvent();
             result._audioIn = devListChangedEvnt.audioIn;
@@ -55,7 +55,7 @@ namespace CDO
         public MediaType MediaType { get { return _mediaType; } }
         public ConnectionType ConnTypw { get { return _connType; } }
 
-        internal static MediaConnTypeChangedEvent FromNative(CloudeoSdkWrapper.CDOMediaConnTypeChangedEvent mediaConnTypeChangedEvnt)
+        internal static MediaConnTypeChangedEvent FromNative(CDOMediaConnTypeChangedEvent mediaConnTypeChangedEvnt)
         {
             MediaConnTypeChangedEvent result = new MediaConnTypeChangedEvent();
             result._scopeId = mediaConnTypeChangedEvnt.scopeId.body;
@@ -77,7 +77,7 @@ namespace CDO
         public long RemoteUserId { get { return _remoteUserId; } }
         public Dictionary<string, float> Stats { get { return _stats; } }
 
-        internal static MediaStatsEvent FromNative(CloudeoSdkWrapper.CDOMediaStatsEvent mediaStatsEvnt)
+        internal static MediaStatsEvent FromNative(CDOMediaStatsEvent mediaStatsEvnt)
         {
             MediaStatsEvent result = new MediaStatsEvent();
             result._scopeId = mediaStatsEvnt.scopeId.body;
@@ -87,7 +87,7 @@ namespace CDO
             return result;
         }
 
-        internal static Dictionary<string, float> getStats(CloudeoSdkWrapper.CDOMediaStats stats)
+        internal static Dictionary<string, float> getStats(CDOMediaStats stats)
         {
             Dictionary<string, float> result = new Dictionary<string,float>();
             result.Add("avgJitter", stats.avgJitter);
@@ -117,7 +117,7 @@ namespace CDO
         public long SrcUserId { get { return _srcUserId; } }
         public string Data { get { return _data; } }
 
-        internal static MessageEvent FromNative(CloudeoSdkWrapper.CDOMessageEvent messageEvnt)
+        internal static MessageEvent FromNative(CDOMessageEvent messageEvnt)
         {
             MessageEvent result = new MessageEvent();
             result._srcUserId = messageEvnt.srcUserId;
@@ -132,7 +132,7 @@ namespace CDO
 
         public int Activity { get { return _activity; } }
 
-        internal static MicActivityEvent FromNative(CloudeoSdkWrapper.CDOMicActivityEvent micActivityEvnt)
+        internal static MicActivityEvent FromNative(CDOMicActivityEvent micActivityEvnt)
         {
             MicActivityEvent result = new MicActivityEvent();
             result._activity = micActivityEvnt.activity;
@@ -146,7 +146,7 @@ namespace CDO
 
         public int Gain { get { return _gain; } }
 
-        internal static MicGainEvent FromNative(CloudeoSdkWrapper.CDOMicGainEvent micGainEvnt)
+        internal static MicGainEvent FromNative(CDOMicGainEvent micGainEvnt)
         {
             MicGainEvent result = new MicGainEvent();
             result._gain = micGainEvnt.gain;
@@ -164,7 +164,7 @@ namespace CDO
         public int Width { get { return _width; } }
         public int Height { get { return _height; } }
 
-        internal static VideoFrameSizeChangedEvent FromNative(CloudeoSdkWrapper.CDOVideoFrameSizeChangedEvent vidFrameSizeChangedEvent)
+        internal static VideoFrameSizeChangedEvent FromNative(CDOVideoFrameSizeChangedEvent vidFrameSizeChangedEvent)
         {
             VideoFrameSizeChangedEvent result = new VideoFrameSizeChangedEvent();
             result._sinkId = vidFrameSizeChangedEvent.sinkId.body;
@@ -205,7 +205,7 @@ namespace CDO
         public bool VideoPublished { get { return _videoPublished; } }
         public string VideoSinkId { get { return _videoSinkId; } }
 
-        internal static UserStateChangedEvent FromNative(CloudeoSdkWrapper.CDOUserStateChangedEvent userStateChangedEvnt)
+        internal static UserStateChangedEvent FromNative(CDOUserStateChangedEvent userStateChangedEvnt)
         {
             UserStateChangedEvent result = new UserStateChangedEvent();
             result._scopeId = userStateChangedEvnt.scopeId.body;

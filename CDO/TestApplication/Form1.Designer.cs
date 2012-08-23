@@ -49,6 +49,8 @@
             this.GetAudioOutputDeviceBTN = new System.Windows.Forms.Button();
             this.SetAudioOutputDeviceBTN = new System.Windows.Forms.Button();
             this.GetAudioOutputDevicesNamesBTN = new System.Windows.Forms.Button();
+            this.connUrlTxtBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.PlatformGB.SuspendLayout();
             this.CloudeoServiceGB.SuspendLayout();
             this.VideoDevicesGB.SuspendLayout();
@@ -269,11 +271,31 @@
             this.GetAudioOutputDevicesNamesBTN.UseVisualStyleBackColor = true;
             this.GetAudioOutputDevicesNamesBTN.Click += new System.EventHandler(this.GetAudioOutputDevicesNamesBTN_Click);
             // 
+            // connUrlTxtBox
+            // 
+            this.connUrlTxtBox.Location = new System.Drawing.Point(349, 498);
+            this.connUrlTxtBox.Name = "connUrlTxtBox";
+            this.connUrlTxtBox.Size = new System.Drawing.Size(169, 20);
+            this.connUrlTxtBox.TabIndex = 9;
+            this.connUrlTxtBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(537, 498);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Connect";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 577);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.connUrlTxtBox);
             this.Controls.Add(this.AudioOutputDevicesGB);
             this.Controls.Add(this.AudioCaptureDevicesGB);
             this.Controls.Add(this.VideoDevicesGB);
@@ -318,6 +340,8 @@
         private System.Windows.Forms.Button GetAudioOutputDeviceBTN;
         private System.Windows.Forms.Button SetAudioOutputDeviceBTN;
         private System.Windows.Forms.Button GetAudioOutputDevicesNamesBTN;
+        private System.Windows.Forms.TextBox connUrlTxtBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 

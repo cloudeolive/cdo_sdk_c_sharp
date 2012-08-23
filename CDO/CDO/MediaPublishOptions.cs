@@ -13,9 +13,9 @@ namespace CDO
         public int nativeWidth;
 
 
-        internal static CloudeoSdkWrapper.CDOMediaPublishOptions toNative(MediaPublishOptions options)
+        internal static CDOMediaPublishOptions toNative(MediaPublishOptions options)
         {
-            CloudeoSdkWrapper.CDOMediaPublishOptions result = new CloudeoSdkWrapper.CDOMediaPublishOptions();
+            CDOMediaPublishOptions result = new CDOMediaPublishOptions();
             result.windowId = StringHelper.toNative(options.windowId);
             result.nativeWidth = options.nativeWidth;
             return result;

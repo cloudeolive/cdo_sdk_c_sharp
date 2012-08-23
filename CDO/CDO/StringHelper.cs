@@ -2,9 +2,9 @@
 {
     internal static class StringHelper
     {
-        internal static CloudeoSdkWrapper.CDOString toNative(string s)
+        internal static CDOString toNative(string s)
         {
-            CloudeoSdkWrapper.CDOString result = new CloudeoSdkWrapper.CDOString();
+            CDOString result = new CDOString();
             if (s != null)
             {
                 result.body = s;
@@ -13,7 +13,7 @@
             return result;
         }
 
-        internal static string fromNative(CloudeoSdkWrapper.CDOString cdos)
+        internal static string fromNative(CDOString cdos)
         {
             return cdos.body;
         }

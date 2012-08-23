@@ -33,9 +33,9 @@ namespace CDO
         public VideoScalingFilter filter { get { return _filter; } set { _filter = value; } }
         public System.Windows.Forms.Panel container { get { return _container; } set { _container = value; } }
 
-        internal static CloudeoSdkWrapper.CDORenderRequest toNative(RenderOptions options)
+        internal static CDORenderRequest toNative(RenderOptions options)
         {
-            CloudeoSdkWrapper.CDORenderRequest result = new CloudeoSdkWrapper.CDORenderRequest();
+            CDORenderRequest result = new CDORenderRequest();
             result.sinkId = StringHelper.toNative(options.sinkId);
             result.mirror = options.mirror;
             result.filter = StringHelper.toNative(options.filter.StringValue);
