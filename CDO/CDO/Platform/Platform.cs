@@ -96,6 +96,7 @@ namespace CDO
                 drawR.top = 0;
                 drawR.bottom = 240;
                 NativeAPI.cdo_draw(_platformHandle, ref drawR);
+                e.Graphics.ReleaseHdc(dc);
             }
         }
         private static List<RendererAdapter> _renderers;
