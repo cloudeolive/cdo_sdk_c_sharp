@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudeoService\CloudeoServiceImpl.cs" />
+    <Compile Include="CloudeoService\NativeServiceListenerAdapter.cs" />
     <Compile Include="Platform\InitProgressChangedEvent.cs" />
     <Compile Include="Platform\InitStateChangedEvent.cs" />
     <Compile Include="Platform\PlatformInitOptions.cs" />

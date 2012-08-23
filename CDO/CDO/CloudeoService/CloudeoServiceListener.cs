@@ -221,6 +221,21 @@ namespace CDO
         }
     }
 
+    public class EchoEvent
+    {
+        private string _echoValue;
+
+        internal static EchoEvent FromNative(CDOEchoEvent nEvent)
+        {
+            EchoEvent e = new EchoEvent();
+            e._echoValue = StringHelper.fromNative(nEvent.echoValue);
+            return e;
+        }
+
+        public string echoValue { get { return _echoValue;  } }
+
+
+    }
 
     public interface CloudeoServiceListener
     {
@@ -234,5 +249,23 @@ namespace CDO
         void onMicGain(MicGainEvent e);
         void onUserEvent(UserStateChangedEvent e);
         void onVideoFrameSizeChanged(VideoFrameSizeChangedEvent e);
+        void onEchoEvent(EchoEvent e);
     }
+
+
+    public class CloudeoServiceListenerAdapter:CloudeoServiceListener
+    {
+        public virtual void onConnectionLost(ConnectionLostEvent e) { }
+        public virtual void onDeviceListChanged(DeviceListChangedEvent e) { }
+        public virtual void onMediaConnTypeChanged(MediaConnTypeChangedEvent e) { }
+        public virtual void onMediaStats(MediaStatsEvent e) { }
+        public virtual void onMediaStreamEvent(UserStateChangedEvent e) { }
+        public virtual void onMessage(MessageEvent e) { }
+        public virtual void onMicActivity(MicActivityEvent e) { }
+        public virtual void onMicGain(MicGainEvent e) { }
+        public virtual void onUserEvent(UserStateChangedEvent e) { }
+        public virtual void onVideoFrameSizeChanged(VideoFrameSizeChangedEvent e) { }
+        public virtual void onEchoEvent(EchoEvent e) { }
+    }
+
 }

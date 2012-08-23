@@ -23,27 +23,7 @@ namespace CDO
 
         private CloudeoServiceListener _cloudeoServiceListener;
 
-        private on_video_frame_size_changed_clbck_t
-                _on_video_frame_size_changed_callback_t;
-        private on_connection_lost_clbck_t
-                _on_connection_lost_callback_t;
-        private on_user_event_clbck_t
-                _on_user_event_callback_t;
-        private on_media_stream_clbck_t
-                _on_media_stream_callback_t;
-        private on_mic_activity_clbck_t
-                _on_mic_activity_callback_t;
-        private on_mic_gain_clbck_t
-                _on_mic_gain_callback_t;
-        private on_device_list_changed_clbck_t
-                _on_device_list_changed_callback_t;
-        private on_media_stats_clbck_t
-                _on_media_stats_callback_t;
-        private on_message_clbck_t _on_message_callback_t;
-        private on_media_conn_type_changed_clbck_t
-                _on_media_conn_type_changed_callback_t;
-        private on_echo_clbck_t
-                _on_echo_callback_t;
+        private List<NativeServiceListenerAdapter> _listeners;
 
         #endregion
 
@@ -65,6 +45,7 @@ namespace CDO
         private void InitCloudeoServiceImpl()
         {
             _respondersDictionary = new Dictionary<uint, object>();
+            _listeners = new List<NativeServiceListenerAdapter>();
             _enumarator = 0;
 
             _cdo_void_result_callback_t = new cdo_void_rclbck_t(cdo_void_result_callback_t);
@@ -72,17 +53,7 @@ namespace CDO
             _cdo_int_result_callback_t = new cdo_int_rclbck_t(cdo_int_result_callback_t);
             _cdo_get_device_names_result_callback_t = new cdo_get_device_names_rclbck_t(cdo_get_device_names_result_callback_t);
 
-            _on_video_frame_size_changed_callback_t = new on_video_frame_size_changed_clbck_t(on_video_frame_size_changed_callback_t);
-            _on_connection_lost_callback_t = new on_connection_lost_clbck_t(on_connection_lost_callback_t);
-            _on_user_event_callback_t = new on_user_event_clbck_t(on_user_event_callback_t);
-            _on_media_stream_callback_t = new on_media_stream_clbck_t(on_media_stream_callback_t);
-            _on_mic_activity_callback_t = new on_mic_activity_clbck_t(on_mic_activity_callback_t);
-            _on_mic_gain_callback_t = new on_mic_gain_clbck_t(on_mic_gain_callback_t);
-            _on_device_list_changed_callback_t = new on_device_list_changed_clbck_t(on_device_list_changed_callback_t);
-            _on_media_stats_callback_t = new on_media_stats_clbck_t(on_media_stats_callback_t);
-            _on_message_callback_t = new on_message_clbck_t(on_message_callback_t);
-            _on_media_conn_type_changed_callback_t = new on_media_conn_type_changed_clbck_t(on_media_conn_type_changed_callback_t);
-            _on_echo_callback_t = new on_echo_clbck_t(on_echo_callback_t);
+            
         }
 
         #endregion
@@ -131,27 +102,15 @@ namespace CDO
         public void addServiceListener(Responder<object> responder,
                                        CloudeoServiceListener listener)
         {
-            _cloudeoServiceListener = listener;
-            CDOServiceListener lstnr = new CDOServiceListener();
-            lstnr.opaque = IntPtr.Zero;
-            lstnr.onConnectionLost = _on_connection_lost_callback_t;
-            lstnr.onDeviceListChanged = _on_device_list_changed_callback_t;
-            lstnr.onEcho = _on_echo_callback_t;
-            lstnr.onMediaConnTypeChanged =
-                _on_media_conn_type_changed_callback_t;
-            lstnr.onMediaStats = _on_media_stats_callback_t;
-            lstnr.onMediaStreamEvent = _on_media_stream_callback_t;
-            lstnr.onMessage = _on_message_callback_t;
-            lstnr.onMicActivity = _on_mic_activity_callback_t;
-            lstnr.onMicGain = _on_mic_gain_callback_t;
-            lstnr.onUserEvent = _on_user_event_callback_t;
-            lstnr.onVideoFrameSizeChanged =
-                _on_video_frame_size_changed_callback_t;
+            NativeServiceListenerAdapter listenerAdapter = 
+                new NativeServiceListenerAdapter(listener);
+            CDOServiceListener listenerNative = listenerAdapter.toNative();
             NativeAPI.cdo_add_service_listener(
                 _cdo_void_result_callback_t,
                 _platformHandle,
                 new IntPtr(saveResponder(responder)),
-                ref lstnr);
+                ref listenerNative);
+            _listeners.Add(listenerAdapter);
         }
 
 
@@ -444,90 +403,7 @@ namespace CDO
                 responder.errHandler(error.err_code, error.err_message.body);
         }
 
-        // CDOServiceListener callback handlers
-
-        private void on_video_frame_size_changed_callback_t(IntPtr opaque,
-            ref CDOVideoFrameSizeChangedEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onVideoFrameSizeChanged(
-                    VideoFrameSizeChangedEvent.FromNative(e));
-        }
-
-        private void on_connection_lost_callback_t(IntPtr opaque,
-            ref CDOConnectionLostEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onConnectionLost(
-                    ConnectionLostEvent.FromNative(e));
-        }
-
-        private void on_user_event_callback_t(IntPtr opaque,
-            ref CDOUserStateChangedEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onUserEvent(
-                    UserStateChangedEvent.FromNative(e));
-        }
-
-        private void on_media_stream_callback_t(IntPtr opaque,
-            ref CDOUserStateChangedEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMediaStreamEvent(
-                    UserStateChangedEvent.FromNative(e));
-        }
-
-        private void on_mic_activity_callback_t(IntPtr opaque,
-            ref CDOMicActivityEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMicActivity(
-                    MicActivityEvent.FromNative(e));
-        }
-
-        private void on_mic_gain_callback_t(IntPtr opaque,
-            ref CDOMicGainEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMicGain(MicGainEvent.FromNative(e));
-        }
-
-        private void on_device_list_changed_callback_t(IntPtr opaque,
-            ref CDODeviceListChangedEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onDeviceListChanged(
-                    DeviceListChangedEvent.FromNative(e));
-        }
-
-        private void on_media_stats_callback_t(IntPtr opaque,
-            ref CDOMediaStatsEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMediaStats(
-                    MediaStatsEvent.FromNative(e));
-        }
-
-        private void on_message_callback_t(IntPtr opaque,
-            ref CDOMessageEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMessage(MessageEvent.FromNative(e));
-        }
-
-        private void on_media_conn_type_changed_callback_t(IntPtr opaque,
-            ref CDOMediaConnTypeChangedEvent e)
-        {
-            if (_cloudeoServiceListener != null)
-                _cloudeoServiceListener.onMediaConnTypeChanged(
-                    MediaConnTypeChangedEvent.FromNative(e));
-        }
-
-        private void on_echo_callback_t(IntPtr opaque, ref CDOEchoEvent e)
-        {
-            // TODO: implement maybe later
-        }
+        
 
         #endregion
     }

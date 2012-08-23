@@ -16,36 +16,37 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        [Test]
+        // [Test]
         public void testGetVideoCaptureDeviceNames()
         {
             _service.getVideoCaptureDeviceNames(createDevsResponder());
-            Assert.IsTrue(awaitDictResult().Count > 0);
+            Assert.IsTrue(awaitDictResult("getVideoCaptureDeviceNames", 5000).Count > 0);
         }
 
-        [Test]
+        // [Test]
         public void testSetVideoCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getVideoCaptureDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getVideoCaptureDeviceNames", 5000);
             Assert.IsTrue(devs.Count > 0);
             _service.setVideoCaptureDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setVideoCaptureDevice", 5000);
         }
 
 
-        [Test]
+        // [Test]
         public void testGetVideoCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getVideoCaptureDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getVideoCaptureDeviceNames", 5000);
             Assert.IsTrue(devs.Count > 0);
             _service.setVideoCaptureDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setVideoCaptureDevice", 5000);
             _service.getVideoCaptureDevice(createStringResponder());
-            Assert.AreEqual(devs.Keys.First(), awaitStringResult());
+            Assert.AreEqual(devs.Keys.First(),
+                awaitStringResult("getVideoCaptureDevice", 5000));
         }
 
 
@@ -54,36 +55,36 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        [Test]
+        // [Test]
         public void testGetAudioCaptureDeviceNames()
         {
             _service.getAudioCaptureDeviceNames(createDevsResponder());
-            Assert.IsTrue(awaitDictResult().Count > 0);
+            Assert.IsTrue(awaitDictResult("getAudioCaptureDeviceNames").Count > 0);
         }
 
-        [Test]
+        // [Test]
         public void testSetAudioCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getAudioCaptureDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getAudioCaptureDeviceNames");
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioCaptureDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setAudioCaptureDevice");
         }
 
 
-        [Test]
+        // [Test]
         public void testGetAudioCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getAudioCaptureDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getAudioCaptureDeviceNames");
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioCaptureDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setAudioCaptureDevice");
             _service.getAudioCaptureDevice(createStringResponder());
-            Assert.AreEqual(devs.Keys.First(), awaitStringResult());
+            Assert.AreEqual(devs.Keys.First(), awaitStringResult("getAudioCaptureDevice"));
         }
 
         /*
@@ -91,36 +92,36 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        [Test]
+        // [Test]
         public void testGetAudioOutputDeviceNames()
         {
             _service.getAudioOutputDeviceNames(createDevsResponder());
-            Assert.IsTrue(awaitDictResult().Count > 0);
+            Assert.IsTrue(awaitDictResult("getAudioOutputDeviceNames").Count > 0);
         }
 
-        [Test]
+        // [Test]
         public void testSetAudioOutputDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getAudioOutputDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getAudioOutputDeviceNames");
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioOutputDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setAudioOutputDevice");
         }
 
 
-        [Test]
+        // [Test]
         public void testGetAudioOutputDevice()
         {
             Dictionary<string, string> devs = null; ;
             _service.getAudioOutputDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getAudioOutputDeviceNames");
             Assert.IsTrue(devs.Count > 0);
             _service.setAudioOutputDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setAudioOutputDevice");
             _service.getAudioOutputDevice(createStringResponder());
-            Assert.AreEqual(devs.Keys.First(), awaitStringResult());
+            Assert.AreEqual(devs.Keys.First(), awaitStringResult("getAudioOutputDevice"));
         }
 
     }

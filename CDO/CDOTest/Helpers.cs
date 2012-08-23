@@ -56,9 +56,9 @@ namespace CDOTest
                 m_event.Set();
         }
 
-        public void Wait()
+        public bool Wait(int timeout = 2000)
         {
-            m_event.WaitOne();
+            return m_event.WaitOne(timeout);
         }
     }
 }

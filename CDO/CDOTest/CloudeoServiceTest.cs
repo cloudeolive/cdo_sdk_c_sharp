@@ -12,7 +12,7 @@ namespace CDOTest
     class CloudeoServiceTest : AbstractCloudeoServiceTest
     {
 
-        [Test]
+        // [Test]
         public void testGetVersion()
         {
             Responder<string> responder = createStringResponder(); 
@@ -21,28 +21,26 @@ namespace CDOTest
         }
 
 
-        [Test]
+        // [Test]
         public void testStartStopLocalVideo()
         {
             // 1. Set proper video capture device
             Dictionary<string, string> devs = null; ;
             _service.getVideoCaptureDeviceNames(createDevsResponder());
-            devs = awaitDictResult();
+            devs = awaitDictResult("getVideoCaptureDeviceNames", 15000);
             Assert.IsTrue(devs.Count > 0);
             _service.setVideoCaptureDevice(createVoidResponder(), devs.Keys.First());
-            awaitVoidResult();
+            awaitVoidResult("setVideoCaptureDevice", 15000);
 
             // 2. Do the real test
 
             _service.startLocalVideo(createStringResponder());
-            string sinkId = awaitStringResult();
+            string sinkId = awaitStringResult("startLocalVideo", 15000);
             Assert.That(sinkId.Length > 0);
 
             Thread.Sleep(5000);
             _service.stopLocalVideo(createVoidResponder());
             awaitVoidResult();
         }
-
-
     }
 }

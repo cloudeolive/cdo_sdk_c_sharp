@@ -71,21 +71,22 @@ namespace CDOTest
 
 
 
-        protected string awaitStringResult()
+        protected string awaitStringResult(string method = "", int timeout = 2000)
         {
-            waitAndCheckError();
+            waitAndCheckError(method, timeout);
             return _stringResult;
         }
 
-        protected Dictionary<string, string> awaitDictResult()
+        protected Dictionary<string, string> awaitDictResult(string method = "", 
+            int timeout = 2000)
         {
-            waitAndCheckError(); 
+            waitAndCheckError(method, timeout); 
             return _devsResult;
         }
 
-        protected void awaitVoidResult()
+        protected void awaitVoidResult(string method = "", int timeout = 2000)
         {
-            waitAndCheckError();
+            waitAndCheckError(method, timeout);
         }
 
         private void setupCall()
@@ -94,10 +95,11 @@ namespace CDOTest
             _latch = new CountdownLatch();
         }
 
-        private void waitAndCheckError()
+        private void waitAndCheckError(string method = "", int timeout = 2000)
         {
-            _latch.Wait();
-            Assert.AreEqual(0, _lastError);
+            Assert.That(_latch.Wait(timeout), "Timeout reached when waiting for result of" +
+             " method call: " + method);
+            Assert.AreEqual(0, _lastError, "Got error result in method: " + method);
         }
 
                 
