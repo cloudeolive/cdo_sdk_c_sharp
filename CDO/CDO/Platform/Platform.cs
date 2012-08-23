@@ -31,6 +31,10 @@ For more information, please refer to <http://unlicense.org/>
 using System;
 using System.Reflection;
 using System.IO;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 namespace CDO
 {
     public delegate void ResultHandler<T>(T result);
@@ -57,6 +61,47 @@ namespace CDO
         #endregion
 
 
+        class RendererAdapter
+        {
+
+            private RenderOptions _options;
+            int _rendererId;
+            IntPtr _platformHandle;
+
+
+            public RendererAdapter(IntPtr platformHandle, RenderOptions options)
+            {
+                _options = options;
+                options.invalidateClbck = invalidate;
+                options.container.Paint += paint;
+                _platformHandle = platformHandle;
+            }
+
+            public int rendererId { set { _rendererId = value; } }
+
+
+            void invalidate(IntPtr opaque)
+            {
+                _options.container.Invalidate();
+            }
+
+            private void paint(object sender, PaintEventArgs e)
+            {
+                IntPtr dc = e.Graphics.GetHdc();
+                CDODrawRequest drawR = new CDODrawRequest();
+                drawR.rendererId = _rendererId;
+                drawR.windowHandle = dc;
+                drawR.left = 0;
+                drawR.right = 320;
+                drawR.top = 0;
+                drawR.bottom = 240;
+                NativeAPI.cdo_draw(_platformHandle, ref drawR);
+            }
+        }
+        private static List<RendererAdapter> _renderers;
+
+
+
         #region Constructors
         
         /**
@@ -67,7 +112,7 @@ namespace CDO
             _platformHandle = IntPtr.Zero;
             _init_done_callback = new cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
             _init_progress_callback = new cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
-            _int_result_callback = new cdo_int_rclbck_t(cdo_int_result_callback);
+            _renderers = new List<RendererAdapter>();
         }
 
         ~Platform() 
@@ -111,7 +156,7 @@ namespace CDO
         public static void init(PlatformInitListener listener, PlatformInitOptions options)
         {
             _listener = listener;
-
+            
             //Perform platform initialization
             string path;
             if (options != null)
@@ -183,13 +228,19 @@ namespace CDO
         }
 
         public static void renderSink(RenderOptions options) 
-        { 
-            /*TODO: implement method*/ 
+        {
+            RendererAdapter adapter = new RendererAdapter(_platformHandle, options);
+            _renderers.Add(adapter);
+            CDORenderRequest nReq = RenderOptions.toNative(options);
+            NativeAPI.cdo_render_sink(renderResponder, _platformHandle, IntPtr.Zero, ref nReq);
+
         }
 
-        private static void cdo_int_result_callback(IntPtr opaque, ref CDOError error, int i)
+
+        
+        private static void renderResponder(IntPtr opaque, ref CDOError error, int i)
         {
-            // TODO: renderSink responder ?
+            _renderers[0].rendererId = i;
         }
 
         // *****************************************************************
