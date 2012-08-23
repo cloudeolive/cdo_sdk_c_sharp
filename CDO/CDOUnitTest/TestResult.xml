@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOUnitTest\bin\Debug\CDOUnitTest.dll" total="1" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-08-23" time="15:06:19">
+  <environment nunit-version="2.6.1.12217" clr-version="2.0.50727.5456" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOUnitTest" machine-name="TKOZAK-VAIO" user="tkozak" user-domain="tkozak-VAIO" />
+  <culture-info current-culture="pl-PL" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOUnitTest\bin\Debug\CDOUnitTest.dll" executed="True" result="Success" success="True" time="0.095" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="CDOUnitTest" executed="True" result="Success" success="True" time="0.064" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="Class1" executed="True" result="Success" success="True" time="0.059" asserts="0">
+            <results>
+              <test-case name="CDOUnitTest.Class1.sampleTest" executed="True" result="Success" success="True" time="0.037" asserts="1" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

@@ -68,7 +68,12 @@
     <Compile Include="ScreenCaptureSource.cs" />
     <Compile Include="StringHelper.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Cdo_Sdk\Cdo_Sdk.csproj">
+      <Project>{2AF20684-BFA8-42B1-91CF-22A0851484F9}</Project>
+      <Name>Cdo_Sdk</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

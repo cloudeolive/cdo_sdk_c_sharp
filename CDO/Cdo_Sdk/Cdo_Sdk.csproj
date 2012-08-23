@@ -43,6 +43,23 @@
     <Content Include="cloudeo_sdk.h">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="cloudeo_sdk\cdo_sdk.dll" />
+    <Content Include="cloudeo_sdk\cloudeo_sdk.h" />
+    <Content Include="cloudeo_sdk\libs\avutil-50.dll" />
+    <Content Include="cloudeo_sdk\libs\CloudeoLogic.dll" />
+    <Content Include="cloudeo_sdk\libs\libeay32.dll" />
+    <Content Include="cloudeo_sdk\libs\ortp.dll" />
+    <Content Include="cloudeo_sdk\libs\ssleay32.dll" />
+    <Content Include="cloudeo_sdk\libs\swscale-0.dll" />
+    <Content Include="cloudeo_sdk\resources\COPYRIGHTS.txt" />
+    <Content Include="cloudeo_sdk\resources\test.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cdo_sdk.lib" />
+    <None Include="cloudeo_sdk\cdo_sdk.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cloudeo_sdk\temp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

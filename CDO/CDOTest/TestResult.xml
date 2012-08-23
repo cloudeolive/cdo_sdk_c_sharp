@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOTest\bin\Debug\CDOTest.dll" total="1" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-08-23" time="15:30:26">
+  <environment nunit-version="2.6.1.12217" clr-version="2.0.50727.5456" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOTest" machine-name="TKOZAK-VAIO" user="tkozak" user-domain="tkozak-VAIO" />
+  <culture-info current-culture="pl-PL" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="c:\Users\tkozak\dev\OSource\c_share_r2\cdo_sdk_c_sharp\CDO\CDOTest\bin\Debug\CDOTest.dll" executed="True" result="Success" success="True" time="0.069" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="CDOTest" executed="True" result="Success" success="True" time="0.046" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="PlatformTest" executed="True" result="Success" success="True" time="0.043" asserts="0">
+            <results>
+              <test-case name="CDOTest.PlatformTest.testInit" executed="True" result="Success" success="True" time="0.027" asserts="0" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

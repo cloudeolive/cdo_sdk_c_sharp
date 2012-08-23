@@ -40,6 +40,8 @@ namespace CDO
 
     public class Platform
     {
+        private static string DEFAULT_SDK_PATH = "cloudeo_sdk";
+
         #region Members
         
         private static Platform _instance;
@@ -122,7 +124,7 @@ namespace CDO
             }
             else
             {
-                path = AssemblyDirectory + "\\cloudeo_sdk";
+                path = AssemblyDirectory + "\\" + DEFAULT_SDK_PATH;
             }
             CDOString str = new CDOString();
             str.body = path;
@@ -140,8 +142,10 @@ namespace CDO
 
             if (_listener != null)
             {
-                InitStateChangedEvent e = new InitStateChangedEvent((err.err_code == 0) ? InitStateChangedEvent.InitState.INITIALIZED : InitStateChangedEvent.InitState.ERROR, 
-                                                                        err.err_code, err.err_message.body);
+                InitStateChangedEvent.InitState state =
+                    (err.err_code == 0) ? InitStateChangedEvent.InitState.INITIALIZED : 
+                                          InitStateChangedEvent.InitState.ERROR;
+                InitStateChangedEvent e = new InitStateChangedEvent(state, err.err_code, err.err_message.body);
                 _listener.onInitStateChanged(e);
             }
         }
@@ -157,16 +161,20 @@ namespace CDO
 
 
 
-        private static void release() 
+        public static void release() 
         { 
             /* dispose the platform */
             NativeAPI.cdo_release_platform(_platformHandle);
+            _platformHandle = IntPtr.Zero;
         }
 
 
         public static CloudeoService getService()
         {
-            return new CloudeoServiceImpl(_platformHandle);
+            if (_platformHandle == IntPtr.Zero)
+                return null;
+            else 
+                return new CloudeoServiceImpl(_platformHandle);
         }
 
         public static void renderSink(RenderOptions options) 
