@@ -12,6 +12,12 @@ using System.Threading;
     public class PlatformTest
     {
 
+        public void tearDown()
+        {
+            //Console.WriteLine("PlatformTest.tearDown()\n");
+            Platform.release();
+        }
+
         [Test]
         public void testInit()
         {
@@ -20,6 +26,7 @@ using System.Threading;
             Platform.init(listener);
             latch.Wait();
             Assert.AreEqual(listener.initState, InitStateChangedEvent.InitState.INITIALIZED);
+            tearDown();
         }
 
         [Test]
@@ -31,6 +38,7 @@ using System.Threading;
             Platform.init(listener);
             latch.Wait();
             Assert.IsNotNull(Platform.getService());
+            tearDown();
         }
     
     

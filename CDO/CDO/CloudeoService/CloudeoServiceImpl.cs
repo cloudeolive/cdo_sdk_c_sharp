@@ -173,7 +173,7 @@ namespace CDO
         }
 
         public void getAudioCaptureDeviceNames(
-            Responder<System.Collections.Generic.Dictionary<string, string>> responder)
+            Responder<Dictionary<string, string>> responder)
         {
             NativeAPI.cdo_get_audio_capture_device_names(
                 _cdo_get_device_names_result_callback_t,
@@ -198,7 +198,7 @@ namespace CDO
         }
 
         public void getAudioOutputDeviceNames(
-            Responder<System.Collections.Generic.Dictionary<string, string>> responder)
+            Responder<Dictionary<string, string>> responder)
         {
             NativeAPI.cdo_get_audio_output_device_names(
                 _cdo_get_device_names_result_callback_t,
@@ -224,7 +224,7 @@ namespace CDO
         }
 
         public void getVideoCaptureDeviceNames(
-            Responder<System.Collections.Generic.Dictionary<string, string>> responder)
+            Responder<Dictionary<string, string>> responder)
         {
             NativeAPI.cdo_get_video_capture_device_names(
                 _cdo_get_device_names_result_callback_t, _platformHandle,
@@ -419,12 +419,10 @@ namespace CDO
         private void cdo_get_device_names_result_callback_t(IntPtr opaque,
             ref CDOError error, IntPtr device, UIntPtr size_t)
         {
-            Responder<System.Collections.Generic.Dictionary<string, string>>
-                responder =
-                (Responder<System.Collections.Generic.Dictionary<string, string>>)
-                getResponder((uint)opaque);
+            Responder<Dictionary<string, string>> responder =
+                (Responder<Dictionary<string, string>>) getResponder((uint)opaque);
 
-            System.Collections.Generic.Dictionary<string, string> devList =
+            Dictionary<string, string> devList =
                 new Dictionary<string,string>();
 
             // 'device' is an array of 'CDODevice' structures, add devices to devList

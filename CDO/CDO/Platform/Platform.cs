@@ -70,7 +70,10 @@ namespace CDO
             _int_result_callback = new cdo_int_rclbck_t(cdo_int_result_callback);
         }
 
-        ~Platform() { release(); }
+        ~Platform() 
+        { 
+            release(); 
+        }
 
         #endregion
 
@@ -164,6 +167,8 @@ namespace CDO
         public static void release() 
         { 
             /* dispose the platform */
+            if (_platformHandle == IntPtr.Zero)
+                return;
             NativeAPI.cdo_release_platform(_platformHandle);
             _platformHandle = IntPtr.Zero;
         }

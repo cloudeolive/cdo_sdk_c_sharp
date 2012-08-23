@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractCloudeoServiceTest.cs" />
     <Compile Include="CloudeoServiceTest.cs" />
+    <Compile Include="CloudeoServiceDevicesTest.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PlatformTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
