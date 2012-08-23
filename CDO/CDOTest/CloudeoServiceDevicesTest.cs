@@ -16,14 +16,14 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        // [Test]
+        [Test]
         public void testGetVideoCaptureDeviceNames()
         {
             _service.getVideoCaptureDeviceNames(createDevsResponder());
             Assert.IsTrue(awaitDictResult("getVideoCaptureDeviceNames", 5000).Count > 0);
         }
 
-        // [Test]
+        [Test]
         public void testSetVideoCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
@@ -35,7 +35,7 @@ namespace CDOTest
         }
 
 
-        // [Test]
+        [Test]
         public void testGetVideoCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
@@ -55,14 +55,14 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        // [Test]
+        [Test]
         public void testGetAudioCaptureDeviceNames()
         {
             _service.getAudioCaptureDeviceNames(createDevsResponder());
             Assert.IsTrue(awaitDictResult("getAudioCaptureDeviceNames").Count > 0);
         }
 
-        // [Test]
+        [Test]
         public void testSetAudioCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
@@ -74,7 +74,7 @@ namespace CDOTest
         }
 
 
-        // [Test]
+        [Test]
         public void testGetAudioCaptureDevice()
         {
             Dictionary<string, string> devs = null; ;
@@ -92,14 +92,14 @@ namespace CDOTest
          * ==========================================================================
          */
 
-        // [Test]
+        [Test]
         public void testGetAudioOutputDeviceNames()
         {
             _service.getAudioOutputDeviceNames(createDevsResponder());
             Assert.IsTrue(awaitDictResult("getAudioOutputDeviceNames").Count > 0);
         }
 
-        // [Test]
+        [Test]
         public void testSetAudioOutputDevice()
         {
             Dictionary<string, string> devs = null; ;
@@ -111,7 +111,7 @@ namespace CDOTest
         }
 
 
-        // [Test]
+        [Test]
         public void testGetAudioOutputDevice()
         {
             Dictionary<string, string> devs = null; ;

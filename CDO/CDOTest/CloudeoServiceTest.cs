@@ -12,7 +12,7 @@ namespace CDOTest
     class CloudeoServiceTest : AbstractCloudeoServiceTest
     {
 
-        // [Test]
+        [Test]
         public void testGetVersion()
         {
             Responder<string> responder = createStringResponder(); 
@@ -21,7 +21,7 @@ namespace CDOTest
         }
 
 
-        // [Test]
+        [Test]
         public void testStartStopLocalVideo()
         {
             // 1. Set proper video capture device

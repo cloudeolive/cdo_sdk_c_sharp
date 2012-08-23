@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractCloudeoServiceTest.cs" />
+    <Compile Include="CloudeoServiceConnectivityTest.cs" />
     <Compile Include="CloudeoServiceListenerTest.cs" />
     <Compile Include="CloudeoServiceTest.cs" />
     <Compile Include="CloudeoServiceDevicesTest.cs" />

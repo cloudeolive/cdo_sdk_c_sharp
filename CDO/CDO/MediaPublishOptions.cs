@@ -16,8 +16,11 @@ namespace CDO
         internal static CDOMediaPublishOptions toNative(MediaPublishOptions options)
         {
             CDOMediaPublishOptions result = new CDOMediaPublishOptions();
-            result.windowId = StringHelper.toNative(options.windowId);
-            result.nativeWidth = options.nativeWidth;
+            if (options != null)
+            {
+                result.windowId = StringHelper.toNative(options.windowId);
+                result.nativeWidth = options.nativeWidth;
+            }
             return result;
         }
     }

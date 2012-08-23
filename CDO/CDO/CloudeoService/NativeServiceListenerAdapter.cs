@@ -154,12 +154,9 @@ namespace CDO
 
         private void on_echo_callback_t(IntPtr opaque, ref CDOEchoEvent e)
         {
-            Console.WriteLine("Got an echo notification");
             if (_listener != null)
                 _listener.onEchoEvent(EchoEvent.FromNative(e));
-            else
-                Console.WriteLine(".. but the listener is null.");
-            
+
         }
     }
 }

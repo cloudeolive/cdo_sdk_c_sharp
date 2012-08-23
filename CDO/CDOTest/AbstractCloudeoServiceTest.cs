@@ -18,6 +18,7 @@ namespace CDOTest
         protected Dictionary<string, string> _devsResult;
 
         private int _lastError;
+        private string _lastErrMessage;
 
         protected Responder<string> createStringResponder()
         {
@@ -31,6 +32,7 @@ namespace CDOTest
                 delegate(int errCode, string errMessage)
                 {
                     _lastError = errCode;
+                    _lastErrMessage = errMessage;
                     _latch.Signal();
                 }
                 );
@@ -47,6 +49,7 @@ namespace CDOTest
                 delegate(int errCode, string errMessage)
                 {
                     _lastError = errCode;
+                    _lastErrMessage = errMessage; 
                     _latch.Signal();
                 }
                 );
@@ -64,6 +67,7 @@ namespace CDOTest
                 delegate(int errCode, string errMessage)
                 {
                     _lastError = errCode;
+                    _lastErrMessage = errMessage; 
                     _latch.Signal();
                 }
                 );
@@ -99,7 +103,8 @@ namespace CDOTest
         {
             Assert.That(_latch.Wait(timeout), "Timeout reached when waiting for result of" +
              " method call: " + method);
-            Assert.AreEqual(0, _lastError, "Got error result in method: " + method);
+            Assert.AreEqual(0, _lastError, "Got error result in method: " + method + 
+                " err message: " + _lastErrMessage);
         }
 
                 

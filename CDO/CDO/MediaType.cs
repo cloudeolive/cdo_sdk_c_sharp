@@ -22,9 +22,9 @@ namespace CDO
             stringValue = s;
         }
 
-        public static MediaType AUDIO  = new MediaType("AUDIO");
-        public static MediaType VIDEO  = new MediaType("VIDEO");
-        public static MediaType SCREEN = new MediaType("SCREEN");
+        public static MediaType AUDIO  = new MediaType("audio");
+        public static MediaType VIDEO  = new MediaType("video");
+        public static MediaType SCREEN = new MediaType("screen");
 
         internal static MediaType FromString(string s)
         {

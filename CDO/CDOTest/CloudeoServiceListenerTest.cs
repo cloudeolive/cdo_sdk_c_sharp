@@ -41,7 +41,6 @@ namespace CDOTest
             _service.addServiceListener(createVoidResponder(), listener);
             awaitVoidResult("addServiceListener");
             _service.sendEchoNotification(createVoidResponder(), "whatever");
-            Console.WriteLine("Notification sent");
             awaitVoidResult();
             Assert.IsTrue(latch.Wait(), "Got timeout when waiting for the event");
             Assert.IsNotNull(listener.receivedEvent);
