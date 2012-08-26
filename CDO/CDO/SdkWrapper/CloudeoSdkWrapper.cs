@@ -87,9 +87,11 @@ namespace CDO
             * Name of scaling filter to be used when scaling the frames.
             */
         public CDOString filter;
+
         /**
             * Flag defining whether the frames should be mirrored or not.
             */
+        [MarshalAs(UnmanagedType.U1)]
         public bool mirror;
         /**
             * Opaque, platform specific window handle used for rendering
@@ -164,13 +166,17 @@ namespace CDO
 
         public Int64 userId;
 
+        [MarshalAs(UnmanagedType.U1)]
         public bool isConnected;
 
+        [MarshalAs(UnmanagedType.U1)]
         public bool audioPublished;
 
+        [MarshalAs(UnmanagedType.U1)]
         public bool videoPublished;
         public CDOString videoSinkId;
 
+        [MarshalAs(UnmanagedType.U1)]
         public bool screenPublished;
         public CDOString screenSinkId;
 
@@ -193,8 +199,11 @@ namespace CDO
     [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
     struct CDODeviceListChangedEvent
     {
+        [MarshalAs(UnmanagedType.U1)]
         public bool audioIn;
+        [MarshalAs(UnmanagedType.U1)]
         public bool audioOut;
+        [MarshalAs(UnmanagedType.U1)]
         public bool videoIn;
     }
 

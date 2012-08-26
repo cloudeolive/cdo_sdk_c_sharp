@@ -53,54 +53,10 @@ namespace CDO
         private static IntPtr _platformHandle;
 
         private static PlatformInitListener _listener;
-        private static cdo_platform_init_done_clbck _init_done_callback;
-        private static cdo_platform_init_progress_clbck _init_progress_callback;
-
-        private static cdo_int_rclbck_t _int_result_callback;
+        
+        private static RenderSupport _renderSupport;
 
         #endregion
-
-
-        class RendererAdapter
-        {
-
-            private RenderOptions _options;
-            int _rendererId;
-            IntPtr _platformHandle;
-
-
-            public RendererAdapter(IntPtr platformHandle, RenderOptions options)
-            {
-                _options = options;
-                options.invalidateClbck = invalidate;
-                options.container.Paint += paint;
-                _platformHandle = platformHandle;
-            }
-
-            public int rendererId { set { _rendererId = value; } }
-
-
-            void invalidate(IntPtr opaque)
-            {
-                _options.container.Invalidate();
-            }
-
-            private void paint(object sender, PaintEventArgs e)
-            {
-                IntPtr dc = e.Graphics.GetHdc();
-                CDODrawRequest drawR = new CDODrawRequest();
-                drawR.rendererId = _rendererId;
-                drawR.windowHandle = dc;
-                drawR.left = 0;
-                drawR.right = 320;
-                drawR.top = 0;
-                drawR.bottom = 240;
-                NativeAPI.cdo_draw(_platformHandle, ref drawR);
-                e.Graphics.ReleaseHdc(dc);
-            }
-        }
-        private static List<RendererAdapter> _renderers;
-
 
 
         #region Constructors
@@ -111,9 +67,7 @@ namespace CDO
         static Platform()
         {
             _platformHandle = IntPtr.Zero;
-            _init_done_callback = new cdo_platform_init_done_clbck(cdo_platform_init_done_callback);
-            _init_progress_callback = new cdo_platform_init_progress_clbck(cdo_platform_init_progress_callback);
-            _renderers = new List<RendererAdapter>();
+            
         }
 
         ~Platform() 
@@ -182,18 +136,24 @@ namespace CDO
             CDOInitOptions initOptions = new CDOInitOptions();
             initOptions.logicLibPath = str;
 
-            NativeAPI.cdo_init_platform(_init_done_callback, ref initOptions, IntPtr.Zero);
+            NativeAPI.cdo_init_platform(cdo_platform_init_done_callback, ref initOptions, IntPtr.Zero);
         }
 
         private static void cdo_platform_init_done_callback(IntPtr ptr, ref CDOError err, IntPtr h)
         {
-            _platformHandle = h;
-
+            InitStateChangedEvent.InitState state;
+            if (err.err_code == 0)
+            {
+                _platformHandle = h;
+                _renderSupport = new RenderSupport(h);
+                state = InitStateChangedEvent.InitState.INITIALIZED;
+            }
+            else
+            {
+                state = InitStateChangedEvent.InitState.ERROR;
+            }
             if (_listener != null)
             {
-                InitStateChangedEvent.InitState state =
-                    (err.err_code == 0) ? InitStateChangedEvent.InitState.INITIALIZED : 
-                                          InitStateChangedEvent.InitState.ERROR;
                 InitStateChangedEvent e = new InitStateChangedEvent(state, err.err_code, err.err_message.body);
                 _listener.onInitStateChanged(e);
             }
@@ -228,28 +188,44 @@ namespace CDO
                 return new CloudeoServiceImpl(_platformHandle);
         }
 
-        public static void renderSink(RenderOptions options) 
+        public static void renderSink(Responder<int> responder, RenderOptions options)
         {
-            RendererAdapter adapter = new RendererAdapter(_platformHandle, options);
-            _renderers.Add(adapter);
-            CDORenderRequest nReq = RenderOptions.toNative(options);
-            NativeAPI.cdo_render_sink(renderResponder, _platformHandle, IntPtr.Zero, ref nReq);
+            if (_renderSupport != null)
+            {
+                _renderSupport.renderSink(responder, options);
+            }
+            else 
+            {
+                responder.errHandler(-1, "Platform not initialized");
+            }
 
         }
 
-
-        
-        private static void renderResponder(IntPtr opaque, ref CDOError error, int i)
+        public static void stopRender(Responder<object> responder, int responderId)
         {
-            _renderers[0].rendererId = i;
+            if (_renderSupport != null)
+            {
+                _renderSupport.stopRender(responder, responderId);
+            }
+            else
+            {
+                responder.errHandler(-1, "Platform not initialized");
+            }
+
         }
+
 
         // *****************************************************************
         // ********************* ResponderAdapter **************************
 
-        public static Responder<T> createResponder<T>(ResultHandler<T> rh=null, ErrHandler errH=null)
+        public static Responder<T> createResponder<T>(ResultHandler<T> rh = null, ErrHandler errH = null)
         {
             return new ResponderAdapter<T>(rh, errH);
+        }
+
+        public static Responder<T> R<T>(ResultHandler<T> rh = null, ErrHandler errH = null)
+        {
+            return createResponder<T>(rh, errH);
         }
 
         #endregion

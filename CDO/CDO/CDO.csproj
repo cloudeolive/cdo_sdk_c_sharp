@@ -55,6 +55,8 @@
     <Compile Include="Platform\InitProgressChangedEvent.cs" />
     <Compile Include="Platform\InitStateChangedEvent.cs" />
     <Compile Include="Platform\PlatformInitOptions.cs" />
+    <Compile Include="Platform\RendererAdapter.cs" />
+    <Compile Include="Platform\RenderSupport.cs" />
     <Compile Include="SdkWrapper\CloudeoSdkWrapper.cs" />
     <Compile Include="CloudeoService\CloudeoService.cs" />
     <Compile Include="CloudeoService\CloudeoServiceListener.cs" />
@@ -69,12 +71,6 @@
     <Compile Include="Responder.cs" />
     <Compile Include="ScreenCaptureSource.cs" />
     <Compile Include="StringHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cdo_Sdk\Cdo_Sdk.csproj">
-      <Project>{2AF20684-BFA8-42B1-91CF-22A0851484F9}</Project>
-      <Name>Cdo_Sdk</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
