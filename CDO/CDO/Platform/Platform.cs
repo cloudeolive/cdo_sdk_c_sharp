@@ -175,6 +175,7 @@ namespace CDO
             /* dispose the platform */
             if (_platformHandle == IntPtr.Zero)
                 return;
+            _renderSupport.shutdown();
             NativeAPI.cdo_release_platform(_platformHandle);
             _platformHandle = IntPtr.Zero;
         }
@@ -188,7 +189,7 @@ namespace CDO
                 return new CloudeoServiceImpl(_platformHandle);
         }
 
-        public static void renderSink(Responder<int> responder, RenderOptions options)
+        public static void renderSink(Responder<RenderingWidget> responder, RenderOptions options)
         {
             if (_renderSupport != null)
             {
@@ -200,21 +201,7 @@ namespace CDO
             }
 
         }
-
-        public static void stopRender(Responder<object> responder, int responderId)
-        {
-            if (_renderSupport != null)
-            {
-                _renderSupport.stopRender(responder, responderId);
-            }
-            else
-            {
-                responder.errHandler(-1, "Platform not initialized");
-            }
-
-        }
-
-
+        
         // *****************************************************************
         // ********************* ResponderAdapter **************************
 

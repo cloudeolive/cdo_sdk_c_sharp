@@ -33,7 +33,6 @@
             this.versionLabel = new System.Windows.Forms.Label();
             this.startRenderBtn = new System.Windows.Forms.Button();
             this.stopRenderBtn = new System.Windows.Forms.Button();
-            this.renderingPanel2 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // renderingPanel
@@ -76,7 +75,7 @@
             // stopRenderBtn
             // 
             this.stopRenderBtn.Enabled = false;
-            this.stopRenderBtn.Location = new System.Drawing.Point(261, 284);
+            this.stopRenderBtn.Location = new System.Drawing.Point(97, 284);
             this.stopRenderBtn.Name = "stopRenderBtn";
             this.stopRenderBtn.Size = new System.Drawing.Size(75, 23);
             this.stopRenderBtn.TabIndex = 4;
@@ -84,20 +83,11 @@
             this.stopRenderBtn.UseVisualStyleBackColor = true;
             this.stopRenderBtn.Click += new System.EventHandler(this.stopRenderBtn_Click);
             // 
-            // renderingPanel2
-            // 
-            this.renderingPanel2.BackColor = System.Drawing.Color.White;
-            this.renderingPanel2.Location = new System.Drawing.Point(354, 38);
-            this.renderingPanel2.Name = "renderingPanel2";
-            this.renderingPanel2.Size = new System.Drawing.Size(320, 240);
-            this.renderingPanel2.TabIndex = 1;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 317);
-            this.Controls.Add(this.renderingPanel2);
+            this.ClientSize = new System.Drawing.Size(348, 314);
             this.Controls.Add(this.stopRenderBtn);
             this.Controls.Add(this.startRenderBtn);
             this.Controls.Add(this.versionLabel);
@@ -118,7 +108,6 @@
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Button startRenderBtn;
         private System.Windows.Forms.Button stopRenderBtn;
-        private System.Windows.Forms.Panel renderingPanel2;
     }
 }
 

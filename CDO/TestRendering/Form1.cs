@@ -30,25 +30,20 @@ namespace TestRendering
         private void startRenderBtn_Click(object sender, EventArgs e)
         {
             RenderOptions rOptions = new RenderOptions();
-            rOptions.container = this.renderingPanel;
             rOptions.mirror = false;
             rOptions.filter = VideoScalingFilter.FAST_BILINEAR;
             rOptions.sinkId = _localPreviewSinkId;
-            Platform.renderSink(Platform.R<int>(onRenderStarted), rOptions);
-
-            RenderOptions rOptions2 = new RenderOptions();
-            rOptions2.container = this.renderingPanel2;
-            rOptions2.mirror = true;
-            rOptions2.filter = VideoScalingFilter.FAST_BILINEAR;
-            rOptions2.sinkId = _localPreviewSinkId;
-            Platform.renderSink(Platform.R<int>(onRenderStarted2), rOptions2);            
-
+            Platform.renderSink(Platform.R<RenderingWidget>(onRenderStarted), rOptions);        
         }
 
         private void stopRenderBtn_Click(object sender, EventArgs e)
         {
-            Platform.stopRender(Platform.R<object>(onRenderStopped), _rendererId);
-            Platform.stopRender(Platform.R<object>(onRenderStopped), _rendererId2);
+            RenderingWidget rWidget = (RenderingWidget) renderingPanel.Controls[0];
+            rWidget.stop();
+            renderingPanel.Controls.Clear();
+            Invoke(new EnableDisableDelegate(disableButtonCallback), new object[] { stopRenderBtn });
+            Invoke(new EnableDisableDelegate(enableButtonCallback), new object[] { startRenderBtn });
+
         }
 
         class CDOPlatformReadyListener : PlatformInitListener
@@ -116,23 +111,23 @@ namespace TestRendering
             startRenderBtn_Click(null, null);
         }
 
-        private void onRenderStarted(int rendererId)
+        private delegate void AddWidgetDelegate(Panel panel, Control component);
+
+        private void onRenderStarted(RenderingWidget renderer)
         {
-            _rendererId = rendererId;
+            renderer.Width = renderingPanel.Width;
+            renderer.Height = renderingPanel.Height;
+            
+            Invoke(new AddWidgetDelegate(addWidget), new object[] { renderingPanel, renderer });
             Invoke(new EnableDisableDelegate(enableButtonCallback), new object[] { stopRenderBtn });
             Invoke(new EnableDisableDelegate(disableButtonCallback), new object[] { startRenderBtn });
+        }        
+
+        private void addWidget(Panel panel, Control component)
+        {
+            panel.Controls.Add(component);
         }
 
-        private void onRenderStarted2(int rendererId)
-        {
-            _rendererId2 = rendererId;
-        }
-
-        private void onRenderStopped(object unused)
-        {
-            Invoke(new EnableDisableDelegate(disableButtonCallback), new object[] { stopRenderBtn });
-            Invoke(new EnableDisableDelegate(enableButtonCallback), new object[] { startRenderBtn });
-        }
 
         delegate void EnableDisableDelegate(Button button);
         private void enableButtonCallback(Button btn)

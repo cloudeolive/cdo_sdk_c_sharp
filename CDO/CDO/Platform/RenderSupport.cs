@@ -8,93 +8,84 @@ namespace CDO
     class RenderSupport
     {
 
-        private class PendingCall
-        {
-            public PendingCall(object responder)
-            {
-                this.responder = responder;
-                
-            }
-
-            public object responder;
-            public RendererAdapter renderer;
-            public int rendererId;
-        }
-
-
-
         private int _callIdGenerator;
 
         private Dictionary<int, PendingCall> _pendingCalls;
 
         private IntPtr _platformHandle;
 
-        private Dictionary<int, RendererAdapter> _activeRenderers;
-
+        private Dictionary<int, WeakReference> _activeRenderers;       
 
         public RenderSupport(IntPtr platformHandle)
         {
-            _pendingCalls = new Dictionary<int, PendingCall>();
-            _activeRenderers = new Dictionary<int, RendererAdapter>(); 
+            _pendingCalls = new Dictionary<int, PendingCall>();            
             _callIdGenerator = 0;
-            _platformHandle = platformHandle;        
+            _platformHandle = platformHandle;
+            _activeRenderers = new Dictionary<int, WeakReference>();
         }
 
-        public void renderSink(Responder<int> responder, RenderOptions options)
+        public void shutdown()
         {
-            RendererAdapter adapter = new RendererAdapter(_platformHandle, options);
-            PendingCall call = new PendingCall(responder);
-            call.renderer = adapter;
+            foreach (KeyValuePair<int, WeakReference> entry in _activeRenderers)
+            {
+                if (entry.Value.IsAlive)
+                {
+                    ((RenderingWidget)entry.Value.Target).stop(false);
+                }
+            }
+            _activeRenderers.Clear();
+
+        }
+
+        public void renderSink(Responder<RenderingWidget> responder, RenderOptions options)
+        {
             int callId = _callIdGenerator++;
-            _pendingCalls[callId] = call; 
+            RenderingWidget widget = new RenderingWidget(_platformHandle, onRendererPreDispose);
+            _pendingCalls[callId] = new PendingCall(responder, widget);
+            options.invalidateClbck = widget.getInvalidateClbck();
             CDORenderRequest nReq = RenderOptions.toNative(options);
             NativeAPI.cdo_render_sink(renderResponder, _platformHandle, new IntPtr(callId), ref nReq);
-
         }
-
-        public void stopRender(Responder<object> responder, int rendererId)
-        {
-            PendingCall call = new PendingCall(responder);
-            call.rendererId = rendererId;
-            int callId = _callIdGenerator++;
-            _pendingCalls[callId] = call;
-            NativeAPI.cdo_stop_render(stopRenderResponder, _platformHandle, new IntPtr(callId), rendererId);
-        }
-
-
+        
         private void renderResponder(IntPtr opaque, ref CDOError error, int i)
         {
             int callId = (int)opaque;
             PendingCall call = _pendingCalls[callId];
             if (error.err_code == 0)
             {
-                _activeRenderers[i] = call.renderer;
-                ((Responder<int>)call.responder).resultHandler(i);
+                call.renderer.rendererId = i;
+                _activeRenderers[i] = new WeakReference(call.renderer);
+                call.responder.resultHandler(call.renderer);
             }
             else
             {
-                ((Responder<int>)call.responder).errHandler(error.err_code, 
+                call.responder.errHandler(error.err_code, 
                     StringHelper.fromNative(error.err_message));
             }
             _pendingCalls.Remove(callId);
+        }
+        
+
+        private void onRendererPreDispose(int rendererId)
+        {
+            _activeRenderers.Remove(rendererId);
         }
 
-        private void stopRenderResponder(IntPtr opaque, ref CDOError error)
+        private class PendingCall
         {
-            int callId = (int)opaque;
-            PendingCall call = _pendingCalls[callId];
-            Responder<object> responder = (Responder<object>) call.responder;
-            if (error.err_code == 0)
+            public Responder<RenderingWidget> responder;
+            public RenderingWidget renderer;
+
+            public PendingCall(Responder<RenderingWidget> responder,
+                RenderingWidget renderer)
             {
-                responder.resultHandler(null);
+                this.responder = responder;
+                this.renderer = renderer;
             }
-            else
-            {
-                responder.errHandler(error.err_code, 
-                    StringHelper.fromNative(error.err_message));
-            }
-            _activeRenderers.Remove(call.rendererId);
-            _pendingCalls.Remove(callId);
+
         }
     }
+
+    
+
 }

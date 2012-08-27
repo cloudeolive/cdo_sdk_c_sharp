@@ -40,8 +40,7 @@ namespace CDOTest
     public class CountdownLatch
     {
         private int m_remain;
-        private EventWaitHandle m_event;
-
+   
         
         public CountdownLatch(int count = 1)
         {

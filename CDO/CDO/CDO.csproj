@@ -55,7 +55,9 @@
     <Compile Include="Platform\InitProgressChangedEvent.cs" />
     <Compile Include="Platform\InitStateChangedEvent.cs" />
     <Compile Include="Platform\PlatformInitOptions.cs" />
-    <Compile Include="Platform\RendererAdapter.cs" />
+    <Compile Include="Platform\RenderingWidget.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Platform\RenderSupport.cs" />
     <Compile Include="SdkWrapper\CloudeoSdkWrapper.cs" />
     <Compile Include="CloudeoService\CloudeoService.cs" />

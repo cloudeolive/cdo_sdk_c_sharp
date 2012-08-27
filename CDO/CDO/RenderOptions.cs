@@ -24,16 +24,10 @@ namespace CDO
         private bool _mirror;
         private VideoScalingFilter _filter;
         private invalidate_clbck_t _invalidateClbck;
-
-        /**
-         * UI element that will be used for rendering
-         */
-        private System.Windows.Forms.Panel _container;
-
+        
         public string sinkId { get { return _sinkId; } set { _sinkId = value; } }
         public bool mirror { get { return _mirror; } set { _mirror = value; } }
         public VideoScalingFilter filter { get { return _filter; } set { _filter = value; } }
-        public System.Windows.Forms.Panel container { get { return _container; } set { _container = value; } }
         internal invalidate_clbck_t invalidateClbck {set { _invalidateClbck = value;} }
 
 
@@ -45,7 +39,6 @@ namespace CDO
             result.mirror = options.mirror;
             result.filter = StringHelper.toNative(options.filter.StringValue);
             result.opaque = IntPtr.Zero;
-            //result.windowHandle = options.container.Handle;
             result.invalidateCallback = options._invalidateClbck;
             return result;
         }
