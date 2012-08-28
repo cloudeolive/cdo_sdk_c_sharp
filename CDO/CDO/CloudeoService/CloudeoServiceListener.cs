@@ -23,7 +23,8 @@ namespace CDO
         public int ErrCode { get { return _errCode; } }
         public string ErrMessage { get { return _errMessage; } }
 
-        internal static ConnectionLostEvent FromNative(CDOConnectionLostEvent connLostEvnt)
+        internal static ConnectionLostEvent FromNative(
+            CDOConnectionLostEvent connLostEvnt)
         {
             ConnectionLostEvent result = new ConnectionLostEvent();
             result._scopeId = connLostEvnt.scopeId.body;
@@ -43,7 +44,8 @@ namespace CDO
         public bool VideoIn { get { return _videoIn; } }
         public bool AudioOut { get { return _audioOut; } }
 
-        internal static DeviceListChangedEvent FromNative(CDODeviceListChangedEvent devListChangedEvnt)
+        internal static DeviceListChangedEvent FromNative(
+            CDODeviceListChangedEvent devListChangedEvnt)
         {
             DeviceListChangedEvent result = new DeviceListChangedEvent();
             result._audioIn = devListChangedEvnt.audioIn;
@@ -63,12 +65,15 @@ namespace CDO
         public MediaType MediaType { get { return _mediaType; } }
         public ConnectionType ConnTypw { get { return _connType; } }
 
-        internal static MediaConnTypeChangedEvent FromNative(CDOMediaConnTypeChangedEvent mediaConnTypeChangedEvnt)
+        internal static MediaConnTypeChangedEvent FromNative(
+            CDOMediaConnTypeChangedEvent mediaConnTypeChangedEvnt)
         {
             MediaConnTypeChangedEvent result = new MediaConnTypeChangedEvent();
             result._scopeId = mediaConnTypeChangedEvnt.scopeId.body;
-            result._mediaType = MediaType.FromString(mediaConnTypeChangedEvnt.mediaType.body);
-            result._connType = ConnectionType.FromString(mediaConnTypeChangedEvnt.connectionType.body);
+            result._mediaType =
+                MediaType.FromString(mediaConnTypeChangedEvnt.mediaType.body);
+            result._connType = ConnectionType.FromString(
+                mediaConnTypeChangedEvnt.connectionType.body);
             return result;
         }
     }
@@ -85,7 +90,8 @@ namespace CDO
         public long RemoteUserId { get { return _remoteUserId; } }
         public Dictionary<string, float> Stats { get { return _stats; } }
 
-        internal static MediaStatsEvent FromNative(CDOMediaStatsEvent mediaStatsEvnt)
+        internal static MediaStatsEvent FromNative(
+            CDOMediaStatsEvent mediaStatsEvnt)
         {
             MediaStatsEvent result = new MediaStatsEvent();
             result._scopeId = mediaStatsEvnt.scopeId.body;
@@ -140,7 +146,8 @@ namespace CDO
 
         public int Activity { get { return _activity; } }
 
-        internal static MicActivityEvent FromNative(CDOMicActivityEvent micActivityEvnt)
+        internal static MicActivityEvent FromNative(
+            CDOMicActivityEvent micActivityEvnt)
         {
             MicActivityEvent result = new MicActivityEvent();
             result._activity = micActivityEvnt.activity;
@@ -172,9 +179,11 @@ namespace CDO
         public int Width { get { return _width; } }
         public int Height { get { return _height; } }
 
-        internal static VideoFrameSizeChangedEvent FromNative(CDOVideoFrameSizeChangedEvent vidFrameSizeChangedEvent)
+        internal static VideoFrameSizeChangedEvent FromNative(
+            CDOVideoFrameSizeChangedEvent vidFrameSizeChangedEvent)
         {
-            VideoFrameSizeChangedEvent result = new VideoFrameSizeChangedEvent();
+            VideoFrameSizeChangedEvent result =
+                new VideoFrameSizeChangedEvent();
             result._sinkId = vidFrameSizeChangedEvent.sinkId.body;
             result._width = vidFrameSizeChangedEvent.width;
             result._height = vidFrameSizeChangedEvent.height; 
@@ -213,11 +222,13 @@ namespace CDO
         public bool VideoPublished { get { return _videoPublished; } }
         public string VideoSinkId { get { return _videoSinkId; } }
 
-        internal static UserStateChangedEvent FromNative(CDOUserStateChangedEvent userStateChangedEvnt)
+        internal static UserStateChangedEvent FromNative(
+            CDOUserStateChangedEvent userStateChangedEvnt)
         {
             UserStateChangedEvent result = new UserStateChangedEvent();
             result._scopeId = userStateChangedEvnt.scopeId.body;
-            result._mediaType = MediaType.FromString(userStateChangedEvnt.mediaType.body);
+            result._mediaType =
+                MediaType.FromString(userStateChangedEvnt.mediaType.body);
             result._isConnected = userStateChangedEvnt.isConnected;
             result._userId = userStateChangedEvnt.userId;
             result._audioPublished = userStateChangedEvnt.audioPublished;
@@ -265,14 +276,17 @@ namespace CDO
     {
         public virtual void onConnectionLost(ConnectionLostEvent e) { }
         public virtual void onDeviceListChanged(DeviceListChangedEvent e) { }
-        public virtual void onMediaConnTypeChanged(MediaConnTypeChangedEvent e) { }
+        public virtual void onMediaConnTypeChanged(MediaConnTypeChangedEvent e)
+        { }
         public virtual void onMediaStats(MediaStatsEvent e) { }
         public virtual void onMediaStreamEvent(UserStateChangedEvent e) { }
         public virtual void onMessage(MessageEvent e) { }
         public virtual void onMicActivity(MicActivityEvent e) { }
         public virtual void onMicGain(MicGainEvent e) { }
         public virtual void onUserEvent(UserStateChangedEvent e) { }
-        public virtual void onVideoFrameSizeChanged(VideoFrameSizeChangedEvent e) { }
+        public virtual void onVideoFrameSizeChanged(
+            VideoFrameSizeChangedEvent e)
+        { }
         public virtual void onEchoEvent(EchoEvent e) { }
     }
 

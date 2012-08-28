@@ -45,14 +45,17 @@ namespace CDO
 
         }
 
-        public void renderSink(Responder<RenderingWidget> responder, RenderOptions options)
+        public void renderSink(Responder<RenderingWidget> responder,
+            RenderOptions options)
         {
             int callId = _callIdGenerator++;
-            RenderingWidget widget = new RenderingWidget(_platformHandle, onRendererPreDispose);
+            RenderingWidget widget =
+                new RenderingWidget(_platformHandle, onRendererPreDispose);
             _pendingCalls[callId] = new PendingCall(responder, widget);
             options.invalidateClbck = widget.getInvalidateClbck();
             CDORenderRequest nReq = RenderOptions.toNative(options);
-            NativeAPI.cdo_render_sink(renderResponder, _platformHandle, new IntPtr(callId), ref nReq);
+            NativeAPI.cdo_render_sink(renderResponder, _platformHandle,
+                new IntPtr(callId), ref nReq);
         }
         
         private void renderResponder(IntPtr opaque, ref CDOError error, int i)

@@ -31,7 +31,8 @@ namespace CDO
             get { return this._errMessage; }
         }
 
-        internal InitStateChangedEvent(InitState state, int errCode, string errMessage)
+        internal InitStateChangedEvent(InitState state, int errCode,
+            string errMessage)
         {
             this._state = state;
             this._errCode = errCode;

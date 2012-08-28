@@ -86,7 +86,8 @@ namespace CDO
             init(listener, null);
         }
 
-        public static void init(PlatformInitListener listener, PlatformInitOptions options)
+        public static void init(PlatformInitListener listener,
+            PlatformInitOptions options)
         {
             _listener = listener;
             
@@ -114,10 +115,12 @@ namespace CDO
             CDOInitOptions initOptions = new CDOInitOptions();
             initOptions.logicLibPath = str;
 
-            NativeAPI.cdo_init_platform(cdo_platform_init_done_callback, ref initOptions, IntPtr.Zero);
+            NativeAPI.cdo_init_platform(cdo_platform_init_done_callback,
+                ref initOptions, IntPtr.Zero);
         }
 
-        private static void cdo_platform_init_done_callback(IntPtr ptr, ref CDOError err, IntPtr h)
+        private static void cdo_platform_init_done_callback(IntPtr ptr,
+            ref CDOError err, IntPtr h)
         {
             InitStateChangedEvent.InitState state;
             if (err.err_code == 0)
@@ -132,12 +135,14 @@ namespace CDO
             }
             if (_listener != null)
             {
-                InitStateChangedEvent e = new InitStateChangedEvent(state, err.err_code, err.err_message.body);
+                InitStateChangedEvent e = new InitStateChangedEvent(state,
+                    err.err_code, err.err_message.body);
                 _listener.onInitStateChanged(e);
             }
         }
 
-        private static void cdo_platform_init_progress_callback(IntPtr ptr, short sh)
+        private static void cdo_platform_init_progress_callback(IntPtr ptr,
+            short sh)
         {
             if (_listener != null)
             {
@@ -167,7 +172,8 @@ namespace CDO
                 return new CloudeoServiceImpl(_platformHandle);
         }
 
-        public static void renderSink(Responder<RenderingWidget> responder, RenderOptions options)
+        public static void renderSink(Responder<RenderingWidget> responder,
+            RenderOptions options)
         {
             if (_renderSupport != null)
             {
@@ -183,12 +189,14 @@ namespace CDO
         // *****************************************************************
         // ********************* ResponderAdapter **************************
 
-        public static Responder<T> createResponder<T>(ResultHandler<T> rh = null, ErrHandler errH = null)
+        public static Responder<T> createResponder<T>(
+            ResultHandler<T> rh = null, ErrHandler errH = null)
         {
             return new ResponderAdapter<T>(rh, errH);
         }
 
-        public static Responder<T> R<T>(ResultHandler<T> rh = null, ErrHandler errH = null)
+        public static Responder<T> R<T>(ResultHandler<T> rh = null,
+            ErrHandler errH = null)
         {
             return createResponder<T>(rh, errH);
         }

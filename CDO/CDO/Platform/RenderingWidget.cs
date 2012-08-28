@@ -27,7 +27,8 @@ namespace CDO
         #endregion
 
         #region ConstructorsDestructors
-        internal RenderingWidget(IntPtr platformHandle, PreDisposeHandlerDelegate preDisposeDelegate)
+        internal RenderingWidget(IntPtr platformHandle,
+            PreDisposeHandlerDelegate preDisposeDelegate)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -67,7 +68,8 @@ namespace CDO
                 return;
             }
             stoppedEvent = new ManualResetEvent(false);
-            NativeAPI.cdo_stop_render(stopRHandler, _platformHandle, IntPtr.Zero, _rendererId);
+            NativeAPI.cdo_stop_render(stopRHandler, _platformHandle,
+                IntPtr.Zero, _rendererId);
             stoppedEvent.WaitOne(2000);
             if(runPreDisposeDelegate)
                 _preDisposeDelegate(_rendererId);

@@ -54,10 +54,15 @@ namespace CDO
             _listeners = new List<NativeServiceListenerAdapter>();
             _enumarator = 0;
 
-            _cdo_void_result_callback_t = new cdo_void_rclbck_t(cdo_void_result_callback_t);
-            _cdo_string_result_callback_t = new cdo_string_rclbck_t(cdo_string_result_callback_t);
-            _cdo_int_result_callback_t = new cdo_int_rclbck_t(cdo_int_result_callback_t);
-            _cdo_get_device_names_result_callback_t = new cdo_get_device_names_rclbck_t(cdo_get_device_names_result_callback_t);
+            _cdo_void_result_callback_t =
+                new cdo_void_rclbck_t(cdo_void_result_callback_t);
+            _cdo_string_result_callback_t =
+                new cdo_string_rclbck_t(cdo_string_result_callback_t);
+            _cdo_int_result_callback_t =
+                new cdo_int_rclbck_t(cdo_int_result_callback_t);
+            _cdo_get_device_names_result_callback_t =
+                new cdo_get_device_names_rclbck_t(
+                      cdo_get_device_names_result_callback_t);
 
             
         }
@@ -146,7 +151,8 @@ namespace CDO
                 new IntPtr(saveResponder(responder)));
         }
 
-        public void setAudioCaptureDevice(Responder<object> responder, string deviceId)
+        public void setAudioCaptureDevice(Responder<object> responder,
+            string deviceId)
         {
             CDOString devId = StringHelper.toNative(deviceId);
             NativeAPI.cdo_set_audio_capture_device(
@@ -207,7 +213,7 @@ namespace CDO
 
 
         public void getScreenCaptureSources(
-            Responder<System.Collections.Generic.List<ScreenCaptureSource>> responder,
+            Responder<List<ScreenCaptureSource>> responder,
             int thumbWidth)
         {
             // TODO: implement in future
@@ -291,7 +297,8 @@ namespace CDO
             // TODO: implement in future
         }
 
-        public void monitorMicActivity(Responder<object> responder, bool enabled)
+        public void monitorMicActivity(Responder<object> responder,
+            bool enabled)
         {
             // TODO: implement in future
         }
@@ -345,7 +352,8 @@ namespace CDO
 
         #region NativeAPI callback handlers
 
-        private void cdo_void_result_callback_t(IntPtr opaque, ref CDOError error)
+        private void cdo_void_result_callback_t(IntPtr opaque,
+            ref CDOError error)
         {
             Responder<object> responder =
                 (Responder<object>) getResponder((uint)opaque);
@@ -385,12 +393,14 @@ namespace CDO
             ref CDOError error, IntPtr device, UIntPtr size_t)
         {
             Responder<Dictionary<string, string>> responder =
-                (Responder<Dictionary<string, string>>) getResponder((uint)opaque);
+                (Responder<Dictionary<string, string>>)
+                getResponder((uint)opaque);
 
             Dictionary<string, string> devList =
                 new Dictionary<string,string>();
 
-            // 'device' is an array of 'CDODevice' structures, add devices to devList
+            // 'device' is an array of 'CDODevice' structures, add devices to
+            // devList
             var arrayValue = device;
             var tableEntrySize = Marshal.SizeOf(typeof(CDODevice));
             uint tableSize = (uint)size_t;
@@ -408,8 +418,6 @@ namespace CDO
             else
                 responder.errHandler(error.err_code, error.err_message.body);
         }
-
-        
 
         #endregion
     }

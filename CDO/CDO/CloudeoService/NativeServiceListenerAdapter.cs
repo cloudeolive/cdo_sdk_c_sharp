@@ -44,16 +44,29 @@ namespace CDO
         public NativeServiceListenerAdapter(CloudeoServiceListener listener)
         {
             _listener = listener;
-            _on_video_frame_size_changed_callback_t = new on_video_frame_size_changed_clbck_t(on_video_frame_size_changed_callback_t);
-            _on_connection_lost_callback_t = new on_connection_lost_clbck_t(on_connection_lost_callback_t);
-            _on_user_event_callback_t = new on_user_event_clbck_t(on_user_event_callback_t);
-            _on_media_stream_callback_t = new on_media_stream_clbck_t(on_media_stream_callback_t);
-            _on_mic_activity_callback_t = new on_mic_activity_clbck_t(on_mic_activity_callback_t);
-            _on_mic_gain_callback_t = new on_mic_gain_clbck_t(on_mic_gain_callback_t);
-            _on_device_list_changed_callback_t = new on_device_list_changed_clbck_t(on_device_list_changed_callback_t);
-            _on_media_stats_callback_t = new on_media_stats_clbck_t(on_media_stats_callback_t);
-            _on_message_callback_t = new on_message_clbck_t(on_message_callback_t);
-            _on_media_conn_type_changed_callback_t = new on_media_conn_type_changed_clbck_t(on_media_conn_type_changed_callback_t);
+            _on_video_frame_size_changed_callback_t =
+                new on_video_frame_size_changed_clbck_t(
+                    on_video_frame_size_changed_callback_t);
+            _on_connection_lost_callback_t = new on_connection_lost_clbck_t(
+                on_connection_lost_callback_t);
+            _on_user_event_callback_t = new on_user_event_clbck_t(
+                on_user_event_callback_t);
+            _on_media_stream_callback_t = new on_media_stream_clbck_t(
+                on_media_stream_callback_t);
+            _on_mic_activity_callback_t = new on_mic_activity_clbck_t(
+                on_mic_activity_callback_t);
+            _on_mic_gain_callback_t = new on_mic_gain_clbck_t(
+                on_mic_gain_callback_t);
+            _on_device_list_changed_callback_t =
+                new on_device_list_changed_clbck_t(
+                    on_device_list_changed_callback_t);
+            _on_media_stats_callback_t =
+                new on_media_stats_clbck_t(on_media_stats_callback_t);
+            _on_message_callback_t =
+                new on_message_clbck_t(on_message_callback_t);
+            _on_media_conn_type_changed_callback_t =
+                new on_media_conn_type_changed_clbck_t(
+                    on_media_conn_type_changed_callback_t);
             _on_echo_callback_t = new on_echo_clbck_t(on_echo_callback_t);
         }
 

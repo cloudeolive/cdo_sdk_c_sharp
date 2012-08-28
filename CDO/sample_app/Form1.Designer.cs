@@ -5,7 +5,7 @@
  * Copyright (C) SayMama Ltd 2012
  * Released under the BSD license.
  */
- 
+
 namespace sample_app
 {
     partial class Form1
