@@ -1,4 +1,13 @@
-﻿using System.Reflection;
+﻿/*!
+ * Cloudeo SDK C# bindings.
+ * http://www.cloudeo.tv
+ *
+ * Copyright (C) SayMama Ltd 2012
+ * Released under the BSD license.
+ */
+
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

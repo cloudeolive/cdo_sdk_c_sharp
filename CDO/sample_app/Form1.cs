@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*!
+ * Cloudeo SDK C# bindings.
+ * http://www.cloudeo.tv
+ *
+ * Copyright (C) SayMama Ltd 2012
+ * Released under the BSD license.
+ */
+ 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;

@@ -1,4 +1,12 @@
-﻿namespace sample_app
+﻿/*!
+ * Cloudeo SDK C# bindings.
+ * http://www.cloudeo.tv
+ *
+ * Copyright (C) SayMama Ltd 2012
+ * Released under the BSD license.
+ */
+ 
+namespace sample_app
 {
     partial class Form1
     {

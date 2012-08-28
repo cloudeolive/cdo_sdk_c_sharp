@@ -10,15 +10,23 @@ namespace CDO
    
     internal delegate void PreDisposeHandlerDelegate(int rendererId);
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class RenderingWidget : Control
     {
 
+        #region ClassMembers
+        
         private IntPtr _platformHandle;
         private int _rendererId;
         private EventWaitHandle stoppedEvent;
         private invalidate_clbck_t _invalidateCallback;
         private PreDisposeHandlerDelegate _preDisposeDelegate;
+        
+        #endregion
 
+        #region ConstructorsDestructors
         internal RenderingWidget(IntPtr platformHandle, PreDisposeHandlerDelegate preDisposeDelegate)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -37,10 +45,19 @@ namespace CDO
             stop();
         }
 
+        #endregion 
+
+        #region PublicAPI
+        /// <summary>
+        /// 
+        /// </summary>
         public void stop()
         {
             stop(true);
         }
+        #endregion
+
+        #region PrivateHelpers
 
 
         internal void stop(bool runPreDisposeDelegate)
@@ -95,5 +112,6 @@ namespace CDO
             stoppedEvent.Set();
         }
 
+        #endregion
     }
 }
