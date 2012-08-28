@@ -16,17 +16,43 @@ namespace CDO
     public class RenderingWidget : Control
     {
 
-        #region ClassMembers
+        #region Members
         
+        /// <summary>
+        /// 
+        /// </summary>
         private IntPtr _platformHandle;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private int _rendererId;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private EventWaitHandle stoppedEvent;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private invalidate_clbck_t _invalidateCallback;
         private PreDisposeHandlerDelegate _preDisposeDelegate;
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private cdo_void_rclbck_t _stopRHandler;
+
         #endregion
 
-        #region ConstructorsDestructors
+        #region Constructors
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="platformHandle"></param>
+        /// <param name="preDisposeDelegate"></param>
         internal RenderingWidget(IntPtr platformHandle,
             PreDisposeHandlerDelegate preDisposeDelegate)
         {
@@ -40,7 +66,9 @@ namespace CDO
             _preDisposeDelegate = preDisposeDelegate;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         ~RenderingWidget()
         {
             stop();
@@ -49,6 +77,7 @@ namespace CDO
         #endregion 
 
         #region PublicAPI
+        
         /// <summary>
         /// 
         /// </summary>
@@ -56,11 +85,15 @@ namespace CDO
         {
             stop(true);
         }
+        
         #endregion
 
-        #region PrivateHelpers
+        #region Private helpers
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="runPreDisposeDelegate"></param>
         internal void stop(bool runPreDisposeDelegate)
         {
             if (_rendererId < 0)
@@ -68,7 +101,8 @@ namespace CDO
                 return;
             }
             stoppedEvent = new ManualResetEvent(false);
-            NativeAPI.cdo_stop_render(stopRHandler, _platformHandle,
+            _stopRHandler = new cdo_void_rclbck_t(stopRHandler);
+            NativeAPI.cdo_stop_render(_stopRHandler, _platformHandle,
                 IntPtr.Zero, _rendererId);
             stoppedEvent.WaitOne(2000);
             if(runPreDisposeDelegate)
@@ -76,18 +110,34 @@ namespace CDO
             _rendererId = -1;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         internal invalidate_clbck_t getInvalidateClbck()
         {
             return _invalidateCallback;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="opaque"></param>
         private void invalidateClbck(IntPtr opaque)
         {
             Invalidate();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         internal int rendererId { set { _rendererId = value; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void draw(object sender, PaintEventArgs e)
         {
             if (_rendererId < 0)
@@ -109,6 +159,11 @@ namespace CDO
             e.Graphics.ReleaseHdc(dc);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="opaque"></param>
+        /// <param name="error"></param>
         private void stopRHandler(IntPtr opaque, ref CDOError error) 
         {
             stoppedEvent.Set();

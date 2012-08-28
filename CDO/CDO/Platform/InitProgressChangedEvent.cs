@@ -6,9 +6,12 @@
  * Released under the BSD license.
  */
 
+using System;
+
 namespace CDO
 {
-    public class InitProgressChangedEvent
+    public class InitProgressChangedEvent: EventArgs
+
     {
         private int _progress;
 

@@ -5,10 +5,11 @@
  * Copyright (C) SayMama Ltd 2012
  * Released under the BSD license.
  */
+using System;
 
 namespace CDO
 {
-    public class InitStateChangedEvent
+    public class InitStateChangedEvent : EventArgs
     {
         public enum InitState { INITIALIZED, ERROR }
 

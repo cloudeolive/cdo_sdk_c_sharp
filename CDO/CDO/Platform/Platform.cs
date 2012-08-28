@@ -15,6 +15,7 @@ using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 namespace CDO
 {
+
     public delegate void ResultHandler<T>(T result);
     public delegate void ErrHandler(int errCode, string errMessage);
 
@@ -32,7 +33,7 @@ namespace CDO
         /// <summary>
         /// Default directory where the Cloudeo Native SDK should be available
         /// </summary>
-        private static const string DEFAULT_SDK_PATH = "cloudeo_sdk";
+        private const string DEFAULT_SDK_PATH = "cloudeo_sdk";
 
         
         /// <summary>

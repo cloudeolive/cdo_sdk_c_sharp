@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace CDO
 {
-    public class ConnectionLostEvent 
+    public class ConnectionLostEvent :EventArgs
     {
         private string _scopeId;
         private int _errCode;
@@ -31,7 +31,8 @@ namespace CDO
         }
     }
 
-    public class DeviceListChangedEvent
+    public class DeviceListChangedEvent : EventArgs
+
     {
         private bool _audioIn;
         private bool _videoIn;
@@ -52,7 +53,8 @@ namespace CDO
         }
     }
 
-    public class MediaConnTypeChangedEvent
+    public class MediaConnTypeChangedEvent : EventArgs
+
     {
         private string _scopeId;
         private MediaType _mediaType;
@@ -60,7 +62,7 @@ namespace CDO
 
         public string ScopeId { get { return _scopeId; } }
         public MediaType MediaType { get { return _mediaType; } }
-        public ConnectionType ConnTypw { get { return _connType; } }
+        public ConnectionType ConnType { get { return _connType; } }
 
         internal static MediaConnTypeChangedEvent FromNative(
             CDOMediaConnTypeChangedEvent mediaConnTypeChangedEvnt)
@@ -75,7 +77,8 @@ namespace CDO
         }
     }
 
-    public class MediaStatsEvent
+    public class MediaStatsEvent : EventArgs
+
     {
         private string _scopeId;
         private MediaType _mediaType;
@@ -120,7 +123,8 @@ namespace CDO
         }
     }
 
-    public class MessageEvent
+    public class MessageEvent : EventArgs
+
     {
         private long _srcUserId;
         private string _data;
@@ -137,7 +141,8 @@ namespace CDO
         }
     }
 
-    public class MicActivityEvent
+    public class MicActivityEvent : EventArgs
+
     {
         private int _activity;
 
@@ -152,7 +157,8 @@ namespace CDO
         }
     }
 
-    public class MicGainEvent
+    public class MicGainEvent : EventArgs
+
     {
         private int _gain;
 
@@ -166,7 +172,8 @@ namespace CDO
         }
     }
 
-    public class VideoFrameSizeChangedEvent
+    public class VideoFrameSizeChangedEvent : EventArgs
+
     {
         private string _sinkId;
         private int _width;
@@ -188,7 +195,8 @@ namespace CDO
         }
     }
 
-    public class UserStateChangedEvent
+    public class UserStateChangedEvent : EventArgs
+
     {
         private string _scopeId;
         private MediaType _mediaType;
@@ -237,7 +245,8 @@ namespace CDO
         }
     }
 
-    public class EchoEvent
+    public class EchoEvent : EventArgs
+
     {
         private string _echoValue;
 
@@ -281,6 +290,135 @@ namespace CDO
         public virtual void onMicActivity(MicActivityEvent e) { }
         public virtual void onMicGain(MicGainEvent e) { }
         public virtual void onUserEvent(UserStateChangedEvent e) { }
+        public virtual void onVideoFrameSizeChanged(
+            VideoFrameSizeChangedEvent e)
+        { }
+        public virtual void onEchoEvent(EchoEvent e) { }
+    }
+
+    public class CloudeoServiceEventDispatcher : CloudeoServiceListener
+    {
+
+        #region Connection Lost handling
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void ConnectionLostHandler(object sender, ConnectionLostEvent e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event ConnectionLostHandler ConnectionLost;
+
+        public virtual void onConnectionLost(ConnectionLostEvent e) 
+        {
+            if (ConnectionLost != null)
+                ConnectionLost(this, e);
+        }
+
+        #endregion
+        #region DeviceListChanged handling
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void DeviceListChangedHandler(object sender, DeviceListChangedEvent e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event DeviceListChangedHandler DeviceListChanged;
+
+        public virtual void onDeviceListChanged(DeviceListChangedEvent e)
+        {
+            if (DeviceListChanged != null)
+                DeviceListChanged(this, e);
+        }
+
+
+        #endregion
+        #region MediaConnTypeChanged handling
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void MediaConnTypeChangedHandler(object sender, MediaConnTypeChangedEvent e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event MediaConnTypeChangedHandler MediaConnTypeChanged;
+
+        
+        public virtual void onMediaConnTypeChanged(MediaConnTypeChangedEvent e)
+        {
+            if (MediaConnTypeChanged != null)
+                MediaConnTypeChanged(this, e);
+        }
+        
+        #endregion
+
+        #region MediaStats handling
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void MediaStatsHandler(object sender, MediaStatsEvent e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event MediaStatsHandler MediaStats;
+
+        public virtual void onMediaStats(MediaStatsEvent e)
+        {
+            if (MediaStats != null)
+                MediaStats(this, e);
+        }
+        #endregion
+        #region MediaStream handling
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void UserStateChangedEventHandler(object sender, UserStateChangedEvent e);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event UserStateChangedEventHandler MediaStream;
+
+
+        public virtual void onMediaStreamEvent(UserStateChangedEvent e) 
+        {
+            if (MediaStream != null)
+                MediaStream(this, e);
+        }
+        #endregion
+
+        #region UserEvent handling
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event UserStateChangedEventHandler UserEvent;
+
+        public virtual void onUserEvent(UserStateChangedEvent e)
+        {
+            if (UserEvent != null)
+                UserEvent(this, e);
+        }
+        #endregion
+        
+        public virtual void onMessage(MessageEvent e) { }
+        public virtual void onMicActivity(MicActivityEvent e) { }
+        public virtual void onMicGain(MicGainEvent e) { }
         public virtual void onVideoFrameSizeChanged(
             VideoFrameSizeChangedEvent e)
         { }
