@@ -18,11 +18,11 @@ namespace CDO
     public interface CloudeoService
     {
 
+        #region Basic logic
         /**
          * Version and listener management
          * =====================================================================
          */
-        #region Basic logic
         
         /// <summary>
         /// 
