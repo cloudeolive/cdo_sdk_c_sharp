@@ -20,17 +20,35 @@ namespace CDO
      * =====================================================================
      */
 
-    /**
-        * Max length of the String used to communicate with Cloudeo
-        */
-    // private const int CDO_STRING_MAX_LEN = 512;
+    static class Constants
+    {
+        /**
+         * Max length of the String used to communicate with Cloudeo
+         */
+        public const int CDO_STRING_MAX_LEN = 512;
+    }
 
     [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
     struct CDOString
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=512)]
-        public string body;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.CDO_STRING_MAX_LEN)]
+        private byte[] _body;
         public UInt32 length;
+
+        public string body
+        {
+            get
+            {
+                int len = 0;
+                while (_body[len] != 0) ++len;
+                return System.Text.Encoding.UTF8.GetString(_body, 0, len);
+            }
+            set
+            {
+                _body = new byte[Constants.CDO_STRING_MAX_LEN];
+                System.Text.Encoding.UTF8.GetBytes(value, 0, value.Length, _body, 0);
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
