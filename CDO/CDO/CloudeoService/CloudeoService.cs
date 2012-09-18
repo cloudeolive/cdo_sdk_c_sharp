@@ -34,6 +34,13 @@ namespace CDO
         /// 
         /// </summary>
         /// <param name="responder"></param>
+        /// <param name="applicationId"></param>
+        void setApplicationId(Responder<object> responder, long applicationId);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="responder"></param>
         /// <param name="listener"></param>
         void addServiceListener(Responder<Object> responder,
                 CloudeoServiceListener listener);
@@ -215,11 +222,7 @@ namespace CDO
          * =====================================================================
          */ 
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="responder"></param>
-        void getMicrophoneVolume(Responder<int> responder);
+        
 
         /// <summary>
         /// 
@@ -233,13 +236,6 @@ namespace CDO
         /// <param name="responder"></param>
         /// <param name="enabled"></param>
         void monitorMicActivity(Responder<Object> responder, bool enabled);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="responder"></param>
-        /// <param name="volume"></param>
-        void setMicrophoneVolume(Responder<Object> responder, int volume);
 
         /// <summary>
         /// 
@@ -274,16 +270,43 @@ namespace CDO
         /// 
         /// </summary>
         /// <param name="responder"></param>
-        void startMeasuringStatistics(Responder<Object> responder);
+        void startMeasuringStatistics(Responder<Object> responder, string scopeId, int interval);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="responder"></param>
-        void stopMeasuringStatistics(Responder<Object> responder);
+        void stopMeasuringStatistics(Responder<Object> responder, string scopeId);
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="responder"></param>
+        /// <param name="options"></param>
+        void renderSink(Responder<RenderingWidget> responder, RenderOptions options);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="responder"></param>
+        /// <param name="options"></param>
+        void startRender(Responder<int> responder, RenderOptions options);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="responder"></param>
+        /// <param name="rendererId"></param>
+        void stopRender(Responder<object> responder, int rendererId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="drawRequest"></param>
+        void draw(DrawRequest drawRequest);
+        
         /// <summary>
         /// 
         /// </summary>

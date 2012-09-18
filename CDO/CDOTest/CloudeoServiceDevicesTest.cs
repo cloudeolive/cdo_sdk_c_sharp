@@ -132,5 +132,17 @@ namespace CDOTest
             Assert.AreEqual(devs.Keys.First(), awaitStringResult("getAudioOutputDevice"));
         }
 
+        /*
+         * Screen sharing
+         * ==========================================================================
+         */
+
+        [Test]
+        public void testGetScreenSharingSources()
+        {
+            _service.getScreenCaptureSources(createScrSourcesResponder(), 160);
+            Assert.IsTrue(awaitScrSourcesResult().Count > 0);
+        }
+
     }
 }

@@ -52,13 +52,14 @@
   <ItemGroup>
     <Compile Include="CloudeoService\CloudeoServiceImpl.cs" />
     <Compile Include="CloudeoService\NativeServiceListenerAdapter.cs" />
+    <Compile Include="ErrorCodes.cs" />
     <Compile Include="Platform\InitProgressChangedEvent.cs" />
     <Compile Include="Platform\InitStateChangedEvent.cs" />
     <Compile Include="Platform\PlatformInitOptions.cs" />
     <Compile Include="Platform\RenderingWidget.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Platform\RenderSupport.cs" />
+    <Compile Include="CloudeoService\RenderSupport.cs" />
     <Compile Include="SdkWrapper\CloudeoSdkWrapper.cs" />
     <Compile Include="CloudeoService\CloudeoService.cs" />
     <Compile Include="CloudeoService\CloudeoServiceListener.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="RenderOptions.cs" />
     <Compile Include="Responder.cs" />
     <Compile Include="ScreenCaptureSource.cs" />
-    <Compile Include="StringHelper.cs" />
+    <Compile Include="SdkWrapper\StringHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

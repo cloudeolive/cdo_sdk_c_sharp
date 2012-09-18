@@ -13,26 +13,42 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 namespace CDO
 {
 
+    /// <summary>
+    /// ResultHandler defines a signature of methods that will be receiving asynchronous results of API method calls.
+    /// </summary>
+    /// <see cref="CDO.Responder"/>
+    /// <typeparam name="T">Type of the API call result. Specific to each method</typeparam>
+    /// <param name="result">The actuall result of the method call.</param>
     public delegate void ResultHandler<T>(T result);
+    
+    /// <summary>
+    /// ErrHandler defines a signature for methods that receives error results of API method calls.
+    /// </summary>
+    /// <param name="errCode">Error code explicitly identyfing source of an issue.</param>
+    /// <param name="errMessage">Additional, human-readable error message</param>
     public delegate void ErrHandler(int errCode, string errMessage);
 
     
-
+    /// <summary>
+    /// Class Platform is an entry point to the complete Cloudeo SDK. It provides a methods for 
+    /// platform initialization and fot getting the CloudeoService interface.
+    /// </summary>
     public class Platform
     {
         
         #region Members
-        /**
+        /*
          * Class Members
          * =====================================================================
          */
 
         /// <summary>
         /// Default directory where the Cloudeo Native SDK should be available
-        /// </summary>
+        /// </summary
         private const string DEFAULT_SDK_PATH = "cloudeo_sdk";
 
         
@@ -46,10 +62,7 @@ namespace CDO
         /// </summary>
         private static PlatformInitListener _listener;
         
-        /// <summary>
-        /// Rendering helpers - deals with the startRender method.
-        /// </summary>
-        private static RenderSupport _renderSupport;
+        
 
         /// <summary>
         /// Initialization complete delegate - to prevent delegate
@@ -68,7 +81,7 @@ namespace CDO
          */
         
         /// <summary>
-        /// Static construction
+        /// Static initialization. Private.
         /// </summary>
         static Platform()
         {
@@ -93,19 +106,27 @@ namespace CDO
          */
 
         /// <summary>
-        /// 
+        /// Initializes the Cloudeo SDK using the default options.
         /// </summary>
-        /// <param name="listener"></param>
+        /// <param name="listener">
+        /// Object that will process initialization state change notifications. 
+        /// This includes progress change and different states.
+        /// </param>
         public static void init(PlatformInitListener listener)
         {
             init(listener, null);
         }
 
         /// <summary>
-        /// 
+        /// Initializes the Cloudeo SDK with custom options.
         /// </summary>
-        /// <param name="listener"></param>
-        /// <param name="options"></param>
+        /// <param name="listener">
+        /// Object that will process initialization state change notifications. 
+        /// This includes progress change and different states.
+        /// </param>
+        /// <param name="options">
+        /// Additionall initialization options container.
+        /// </param>
         public static void init(PlatformInitListener listener,
             PlatformInitOptions options)
         {
@@ -128,6 +149,7 @@ namespace CDO
             {
                 path = AssemblyDirectory + "\\" + DEFAULT_SDK_PATH;
             }
+            SetDllDirectory(path);
             CDOString str = new CDOString();
             str.body = path;
             str.length = (UInt32)path.Length;
@@ -140,22 +162,26 @@ namespace CDO
         // =====================================================================
 
         /// <summary>
-        /// 
+        /// Releases the platform resources.
         /// </summary>
         public static void release() 
         { 
             /* dispose the platform */
             if (_platformHandle == IntPtr.Zero)
                 return;
-            _renderSupport.shutdown();
+            // notify service that the platform was disposed so all dangling 
+            // references does not crash.
+            ((CloudeoServiceImpl)_service).platformDisposed();
             NativeAPI.cdo_release_platform(_platformHandle);
             _platformHandle = IntPtr.Zero;
+            // release the service to deallocate it.
+            _service = null;
         }
 
         // =====================================================================
 
         /// <summary>
-        /// 
+        /// Returns the CloudeoService interface. The 
         /// </summary>
         /// <returns></returns>
         public static CloudeoService getService()
@@ -181,9 +207,10 @@ namespace CDO
         public static void renderSink(Responder<RenderingWidget> responder,
             RenderOptions options)
         {
-            if (_renderSupport != null)
+
+            if (_service != null)
             {
-                _renderSupport.renderSink(responder, options);
+                _service.renderSink(responder, options);
             }
             else 
             {
@@ -228,6 +255,10 @@ namespace CDO
          * =====================================================================
          */
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -266,7 +297,6 @@ namespace CDO
             if (err.err_code == 0)
             {
                 _platformHandle = h;
-                _renderSupport = new RenderSupport(h);
                 _service = new CloudeoServiceImpl(h);
                 state = InitStateChangedEvent.InitState.INITIALIZED;
             }

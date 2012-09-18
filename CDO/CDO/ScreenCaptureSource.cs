@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.IO;
 
 namespace CDO
 {
@@ -9,16 +11,17 @@ namespace CDO
     {
         private string _id;
         private string _title;
-        //private SomethingThatWillContainThePicture _image;
+        private Image _snapshot;
 
         public string id { get { return this._id; } }
         public string title { get { return this._title; } }
+        public Image snapshot { get { return this._snapshot; } }
 
-
-        public ScreenCaptureSource(string id, string title)
+        internal ScreenCaptureSource(string id, string title, byte[] imageData)
         {
             this._id = id;
             this._title = title;
+            this._snapshot = Image.FromStream(new MemoryStream(imageData));
         }
     }
 }

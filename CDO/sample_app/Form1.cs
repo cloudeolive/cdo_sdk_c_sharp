@@ -16,16 +16,22 @@ using System.Text;
 using System.Windows.Forms;
 
 using CDO;
+using System.Security.Cryptography;
 
 namespace sample_app
 {
     public partial class Form1 : Form
     {
 
+        private const int APPLICATION_ID = 1;
+        private const string APP_SHARED_SECRET = "CloudeoTestAccountSecret";
+        
         private bool _localVideoStarted;
 
         private CloudeoServiceEventDispatcher _eDispatcher;
+        private static Random random = new Random((int)DateTime.Now.Ticks);
 
+        
         #region Initialization
 
         public Form1()
@@ -52,6 +58,7 @@ namespace sample_app
             logD("Platform initialized. Proceeding with the initialization");
             Platform.Service.getVersion(Platform.R<string>(onVersion, genErrHandler("getVersion")));
             initializeCDOEventListener();
+            Platform.Service.setApplicationId(genGenericResponder<object>("setApplicationId"), APPLICATION_ID);
             Platform.Service.addServiceListener(genGenericResponder<object>("addServiceListener"), _eDispatcher); 
             
             Platform.Service.getAudioCaptureDeviceNames(
@@ -139,12 +146,13 @@ namespace sample_app
         private void connectBtn_Click(object sender, EventArgs e)
         {            
             string scopeId = scopeIdInput.Text;
+            long userId = random.Next(1000);
             logD("Connecting to scope with id: " + scopeId);
             ConnectionDescription connDescr = new ConnectionDescription();
             connDescr.autopublishAudio = true;
             connDescr.autopublishVideo = true;
-            connDescr.url = "174.127.76.179:443/cdocs_" + scopeId;
-            connDescr.token = new Random().Next(1000) + "";
+            connDescr.url = "localhost:7000/" + scopeId;
+            connDescr.token = userId.ToString();
             connDescr.lowVideoStream.maxBitRate = 64;
             connDescr.lowVideoStream.maxWidth = 320;
             connDescr.lowVideoStream.maxHeight = 240;
@@ -158,6 +166,7 @@ namespace sample_app
             connDescr.highVideoStream.maxFps = 15;
             connDescr.highVideoStream.publish = true;
             connDescr.highVideoStream.receive = true;
+            connDescr.authDetails = genAuthDetails(scopeId, userId);
             Platform.Service.connect(genGenericResponder<object>("connect"), connDescr);
             
         }
@@ -221,7 +230,39 @@ namespace sample_app
 
         #region private helpers
 
-        
+        private string randomString(int size)
+        {
+            StringBuilder builder = new StringBuilder();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
+        }
+
+        private AuthDetails genAuthDetails(string scopeId, long userId)
+        {
+            // Fill the simple fields
+            AuthDetails authDetails = new AuthDetails();
+            authDetails.expires =                                                        // 5 minutes 
+                (long) (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds + 300;
+            authDetails.userId = userId;
+            authDetails.salt = randomString(100);
+
+            // Calculate and fill the signature
+            string signatureBody = "" + APPLICATION_ID + scopeId + userId + 
+                authDetails.salt + authDetails.expires + APP_SHARED_SECRET;
+            ASCIIEncoding enc = new ASCIIEncoding();
+            byte[] sigBodyBinary = enc.GetBytes(signatureBody);
+            SHA256 hasher = SHA256Managed.Create();
+            byte[] sigBinary = hasher.ComputeHash(sigBodyBinary);
+            authDetails.signature = BitConverter.ToString(sigBinary).Replace("-", "");
+            
+            return authDetails;
+        }
 
         private void maybeStartLocalVideo(object nothing = null)
         {

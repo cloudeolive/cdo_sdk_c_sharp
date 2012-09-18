@@ -11,34 +11,75 @@ namespace CDO
 
         /**
          * 
-         */ 
+         */
         public uint maxWidth;
-        
+
         /**
          * 
-         */ 
+         */
         public uint maxHeight;
-        
+
         /**
          * 
-         */ 
+         */
         public uint maxBitRate;
-        
+
         /**
          * 
-         */ 
+         */
         public uint maxFps;
-        
+
         /**
          * 
-         */ 
+         */
         public bool publish;
-        
+
         /**
          * 
-         */ 
+         */
         public bool receive;
 
+
+        internal string toJSON()
+        {
+            string json = "";
+            json = "{" +
+                    "\"publish\":" + bool2JsonString(publish) +
+                    ",\"receive\":" + bool2JsonString(receive) +
+                    ",\"maxWidth\":" + maxWidth +
+                    ",\"maxHeight\":" + maxHeight +
+                    ",\"maxBitRate\":" + maxBitRate +
+                    ",\"maxFps\":" + maxFps + "}";
+            return json;
+        }
+
+        private string bool2JsonString(bool value)
+        {
+            return value ? "true" : "false";
+        }
+
+    }
+
+    public class AuthDetails
+    {
+        public long expires;
+
+        public long userId;
+
+        public string salt;
+
+        public string signature;
+
+        internal string toJSON()
+        {
+            string json = "";
+            json = "{" +
+                    "\"expires\":" + expires +
+                    ",\"userId\":" + userId +
+                    ",\"salt\":\"" + salt + "\"" +
+                    ",\"signature\":\"" + signature + "\"}";
+            return json;
+        }
     }
 
     public class ConnectionDescription
@@ -48,6 +89,7 @@ namespace CDO
         {
             highVideoStream = new VideoStreamDescription();
             lowVideoStream = new VideoStreamDescription();
+            authDetails = new AuthDetails();
         }
 
         /**
@@ -59,7 +101,9 @@ namespace CDO
          * 
          */ 
         public VideoStreamDescription lowVideoStream;
-        
+
+        public AuthDetails authDetails;
+
         /**
          * 
          */ 
@@ -94,25 +138,15 @@ namespace CDO
         {
             string json = "";
             json = "{" +
-                    "\"lowVideoStream\":" +
-                    "{" +
-                    "\"publish\":" + bool2JsonString(lowVideoStream.publish) +
-                    ",\"receive\":" + bool2JsonString(lowVideoStream.receive) +
-                    ",\"maxWidth\":" + lowVideoStream.maxWidth +
-                    ",\"maxHeight\":" + lowVideoStream.maxHeight +
-                    ",\"maxBitRate\":" + lowVideoStream.maxBitRate +
-                    ",\"maxFps\":" + lowVideoStream.maxFps + "}" +
-                    ",\"highVideoStream\":" +
-                    "{" +
-                    "\"publish\":" + bool2JsonString(highVideoStream.publish) +
-                    ",\"receive\":" + bool2JsonString(highVideoStream.receive) +
-                    ",\"maxWidth\":" + highVideoStream.maxWidth +
-                    ",\"maxHeight\":" + highVideoStream.maxHeight +
-                    ",\"maxBitRate\":" + highVideoStream.maxBitRate +
-                    ",\"maxFps\":" + highVideoStream.maxFps + "}" +
+                    "\"lowVideoStream\":" + lowVideoStream.toJSON() +
+                    ",\"highVideoStream\":" + highVideoStream.toJSON() +
                     ",\"autopublishVideo\":" + bool2JsonString(autopublishVideo) +
-                    ",\"autopublishAudio\":" + bool2JsonString(autopublishAudio) +
-                    ",\"url\":\"" + url + "\",\"token\":\"" + token + "\"}";
+                    ",\"autopublishAudio\":" + bool2JsonString(autopublishAudio);
+            if (authDetails != null && authDetails.signature != null && authDetails.signature.Length > 0)
+            {
+                json += ",\"authDetails\":" + authDetails.toJSON();
+            }
+            json += ",\"url\":\"" + url + "\",\"token\":\"" + token + "\"}";
             return json;
         }
 

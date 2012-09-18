@@ -24,7 +24,7 @@ namespace CDOTest
         protected string _stringResult;
 
         protected Dictionary<string, string> _devsResult;
-
+        protected List<ScreenCaptureSource> _scrSourcesResult;
         private int _lastError;
         private string _lastErrMessage;
 
@@ -81,6 +81,23 @@ namespace CDOTest
                 );
         }
 
+        protected Responder<List<ScreenCaptureSource>> createScrSourcesResponder()
+        {
+            setupCall();
+            return Platform.createResponder<List<ScreenCaptureSource>>(
+                delegate(List<ScreenCaptureSource> result)
+                {
+                    _scrSourcesResult = result;
+                    _latch.Signal();
+                },
+                delegate(int errCode, string errMessage)
+                {
+                    _lastError = errCode;
+                    _lastErrMessage = errMessage;
+                    _latch.Signal();
+                }
+                );
+        }
 
 
         protected string awaitStringResult(string method = "", int timeout = 2000)
@@ -89,11 +106,17 @@ namespace CDOTest
             return _stringResult;
         }
 
-        protected Dictionary<string, string> awaitDictResult(string method = "", 
+        protected Dictionary<string, string> awaitDictResult(string method = "",
             int timeout = 2000)
         {
-            waitAndCheckError(method, timeout); 
+            waitAndCheckError(method, timeout);
             return _devsResult;
+        }
+
+        protected List<ScreenCaptureSource> awaitScrSourcesResult(int timeout = 2000)
+        {
+            waitAndCheckError("getScreenCaptureSources", timeout);
+            return _scrSourcesResult;
         }
 
         protected void awaitVoidResult(string method = "", int timeout = 2000)

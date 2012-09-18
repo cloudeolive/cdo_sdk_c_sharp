@@ -13,27 +13,23 @@ using System;
 namespace CDO
 {
     using CDOH = IntPtr;
-    
+
     /**
      * =====================================================================
      *  General Data type definitions
      * =====================================================================
      */
 
-    /**
-        * Max length of the String used to communicate with Cloudeo
-        */
-    // private const int CDO_STRING_MAX_LEN = 512;
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOString
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=512)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5120)]
         public string body;
         public UInt32 length;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOError
     {
         public int err_code;
@@ -44,20 +40,20 @@ namespace CDO
     /**
         * Cloudeo SDK Handle
         */
-        //public class CDOH : IntPtr {} 
+    //public class CDOH : IntPtr {} 
 
     /**
         * Device description used by the Cloudeo platform.
         */
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
-    struct CDODevice 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    struct CDODevice
     {
         public CDOString label;
         public CDOString id;
     }
 
-    
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMediaPublishOptions
     {
         /**
@@ -84,7 +80,7 @@ namespace CDO
         * Structure defining all attributes required to start rendering video
         * sink.
         */
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDORenderRequest
     {
         /**
@@ -120,7 +116,7 @@ namespace CDO
     /**
         * Defines all attributes needed to redraw video feed.
         */
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDODrawRequest
     {
         /**
@@ -141,6 +137,39 @@ namespace CDO
     }
 
     /**
+     * Describes single screen sharing source.
+     */
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    struct CDOScreenCaptureSource
+    {
+        /**
+         * Unique ID of a window.
+         */
+        public CDOString id;
+
+        /**
+         * Actual snaphot of window content.
+         */
+        [MarshalAs(UnmanagedType.LPStr)]
+        public string  imageData;
+
+        /**
+         * Size of image data in bytes.
+         */
+        public UIntPtr imageDataLen;
+
+        /**
+         * Width of the window snapshot.
+         */
+        public int width;
+
+        /**
+         * Height of the window snapshot.
+         */
+        public int height;
+    };
+
+    /**
         * =====================================================================
         *  CloudeoServiceListener-related definitions
         * =====================================================================
@@ -151,7 +180,7 @@ namespace CDO
         * =====================================================================
         */
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOVideoFrameSizeChangedEvent
     {
         public CDOString sinkId;
@@ -159,7 +188,7 @@ namespace CDO
         public int width;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOConnectionLostEvent
     {
         public CDOString scopeId;
@@ -167,7 +196,7 @@ namespace CDO
         public CDOString errMessage;
     } ;
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOUserStateChangedEvent
     {
         public CDOString scopeId;
@@ -192,19 +221,19 @@ namespace CDO
 
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMicActivityEvent
     {
         public int activity;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMicGainEvent
     {
         public int gain;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDODeviceListChangedEvent
     {
         [MarshalAs(UnmanagedType.U1)]
@@ -215,7 +244,7 @@ namespace CDO
         public bool videoIn;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMediaStats
     {
         public int layer;      // video only
@@ -235,7 +264,7 @@ namespace CDO
         public float avOffset;    // audio only
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMediaStatsEvent
     {
         public CDOString scopeId;
@@ -244,14 +273,14 @@ namespace CDO
         public CDOMediaStats stats;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMessageEvent
     {
         public CDOString data;
         public Int64 srcUserId;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOMediaConnTypeChangedEvent
     {
         public CDOString scopeId;
@@ -259,7 +288,7 @@ namespace CDO
         public CDOString connectionType;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOEchoEvent
     {
         public CDOString echoValue;
@@ -309,7 +338,7 @@ namespace CDO
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     delegate void on_echo_clbck_t(IntPtr opaque, ref CDOEchoEvent e);
 
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     struct CDOServiceListener
     {
         public IntPtr opaque;
@@ -330,40 +359,40 @@ namespace CDO
         [MarshalAs(UnmanagedType.FunctionPtr)]
         public on_media_stats_clbck_t onMediaStats;
         [MarshalAs(UnmanagedType.FunctionPtr)]
-            public on_message_clbck_t onMessage;
-            [MarshalAs(UnmanagedType.FunctionPtr)]
-            public on_media_conn_type_changed_clbck_t onMediaConnTypeChanged;
-            [MarshalAs(UnmanagedType.FunctionPtr)]
-            public on_echo_clbck_t onEcho;
-        } 
+        public on_message_clbck_t onMessage;
+        [MarshalAs(UnmanagedType.FunctionPtr)]
+        public on_media_conn_type_changed_clbck_t onMediaConnTypeChanged;
+        [MarshalAs(UnmanagedType.FunctionPtr)]
+        public on_echo_clbck_t onEcho;
+    }
 
+    /**
+     * =====================================================================
+     *  Platform initialization
+     * =====================================================================
+     */
+
+    /**
+     * Platform initialization options
+     */
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    struct CDOInitOptions
+    {
         /**
-         * =====================================================================
-         *  Platform initialization
-         * =====================================================================
+         * Path to the Cloudeo Logic shared library.
          */
-
-        /**
-         * Platform initialization options
-         */
-        [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
-        struct CDOInitOptions
-        {
-            /**
-             * Path to the Cloudeo Logic shared library.
-             */
-            public CDOString logicLibPath;
-        }
+        public CDOString logicLibPath;
+    }
 
 
-     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     delegate void cdo_void_rclbck_t(IntPtr opaque,
         ref CDOError error);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     delegate void cdo_string_rclbck_t(IntPtr opaque,
         ref CDOError error, ref CDOString str);
-        
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     delegate void cdo_int_rclbck_t(IntPtr opaque,
         ref CDOError error, int i);
@@ -380,9 +409,23 @@ namespace CDO
     delegate void cdo_platform_init_progress_clbck(IntPtr ptr,
         short sh);
 
+    /**
+ * Defines a signature for receiving a screen capture pseudo-devices list (device maps to a window).
+ * 
+ * @param opaque        opaque pointer passed as the 3rd param to the function 
+ *                      invocation
+ * @param err           error indicator
+ * @param resultList    list of devices
+ * @param resultListLen size of the devices list.
+ */
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    delegate void cdo_get_screen_capture_srcs_rclbck_t(IntPtr opaque, ref CDOError err,
+        IntPtr resultList, UIntPtr resultListLen);
+
     internal class NativeAPI
     {
-        
+
 
 
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -412,7 +455,7 @@ namespace CDO
          * =============================================================================
          */
 
-       
+
 
 
         /**
@@ -426,6 +469,11 @@ namespace CDO
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_get_version(
             cdo_string_rclbck_t resultHandler, CDOH handle, IntPtr opaque);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_set_application_id(cdo_void_rclbck_t rclbck,
+        CDOH handle, IntPtr opaque, long applicationId);
+
 
         [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cdo_add_service_listener(
@@ -567,6 +615,10 @@ namespace CDO
         public static extern void cdo_get_volume(
             cdo_int_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_monitor_mic_activity(
+            cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque, bool monitor);
+
         //========================================================================
         //=============== Local preview management ===============================
         //========================================================================
@@ -590,10 +642,20 @@ namespace CDO
         public static extern void cdo_stop_local_video(
             cdo_void_rclbck_t rclbck, CDOH handle, IntPtr opaque);
 
+
+        //========================================================================
+        //=============== Screen sharing           ===============================
+        //========================================================================
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_get_screen_capture_sources(
+                cdo_get_screen_capture_srcs_rclbck_t rclbck, CDOH handle,
+                IntPtr opaque, int targetWidth);
+
         //============================================================
         //=============== Connectivity ===============================
         //============================================================
-        
+
 
         /**
          *
@@ -632,6 +694,18 @@ namespace CDO
             CDOH handle, IntPtr opaque, ref CDOString scopeId,
             [MarshalAs(UnmanagedType.LPStr)]string msgBody,
             UIntPtr msgSize, ref Int64 recipientId);
+
+        //=========================================================
+        //=============== Statistics ==============================
+        //=========================================================
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_start_measuring_stats(cdo_void_rclbck_t rclbck, 
+            CDOH handle, IntPtr opaque, ref CDOString scopeId, int interval);
+
+        [DllImport("cdo_sdk.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cdo_stop_measuring_stats(cdo_void_rclbck_t rclbck, CDOH handle, 
+            IntPtr opaque, ref CDOString scopeId);
 
         //=========================================================
         //=============== Rendering ===============================

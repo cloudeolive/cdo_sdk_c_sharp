@@ -18,17 +18,23 @@ namespace CDO
         public static VideoScalingFilter BICUBIC = new VideoScalingFilter("BICUBIC");
     }
 
+    public delegate void InvalidateClbck();
+
+
     public class RenderOptions
     {
         private string _sinkId;
         private bool _mirror;
         private VideoScalingFilter _filter;
         private invalidate_clbck_t _invalidateClbck;
-        
+        private InvalidateClbck _customInvalidateClbck;
+
         public string sinkId { get { return _sinkId; } set { _sinkId = value; } }
         public bool mirror { get { return _mirror; } set { _mirror = value; } }
         public VideoScalingFilter filter { get { return _filter; } set { _filter = value; } }
-        internal invalidate_clbck_t invalidateClbck {set { _invalidateClbck = value;} }
+        public InvalidateClbck invalidateClbck { set { _customInvalidateClbck = value; } }
+
+        internal invalidate_clbck_t nativeInvalidateClbck { set { _invalidateClbck = value; } }
 
 
 
@@ -43,6 +49,41 @@ namespace CDO
             return result;
         }
     }
+
+    public class DrawRequest
+    {
+        /**
+         * Area of the target window to render on.
+         */
+        public int top;
+        public int left;
+        public int bottom;
+        public int right;
+        
+        /**
+         * Platform-specific window handle.
+         */
+        public IntPtr hdc;
+        
+        /**
+         * Id of renderer which should be affected by the Draw request.
+         */
+        public int rendererId;
+
+        internal CDODrawRequest toNative()
+        {
+            CDODrawRequest nReq = new CDODrawRequest();
+            nReq.bottom = bottom;
+            nReq.top = top;
+            nReq.left = left;
+            nReq.right = right;
+            nReq.windowHandle = hdc;
+            nReq.rendererId = rendererId;
+            return nReq;
+        }
+
+    }
+
 
     
 }

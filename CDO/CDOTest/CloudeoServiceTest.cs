@@ -28,6 +28,14 @@ namespace CDOTest
             Assert.IsTrue(awaitStringResult().Length > 4);
         }
 
+        [Test]
+        public void testSetAppId()
+        {
+            Responder<object> responder = createVoidResponder();
+            _service.setApplicationId(responder, 1);
+            awaitVoidResult("setApplicationId");
+        }
+
 
         [Test]
         public void testStartStopLocalVideo()
