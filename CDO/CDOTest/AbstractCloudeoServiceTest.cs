@@ -23,8 +23,12 @@ namespace CDOTest
 
         protected string _stringResult;
 
+        protected int _intResult;
+
         protected Dictionary<string, string> _devsResult;
         protected List<ScreenCaptureSource> _scrSourcesResult;
+
+        protected CloudeoServiceEventDispatcher dispatcher;
         private int _lastError;
         private string _lastErrMessage;
 
@@ -35,6 +39,24 @@ namespace CDOTest
                 delegate(string result)
                 {
                     _stringResult = result;
+                    _latch.Signal();
+                },
+                delegate(int errCode, string errMessage)
+                {
+                    _lastError = errCode;
+                    _lastErrMessage = errMessage;
+                    _latch.Signal();
+                }
+                );
+        }
+
+        protected Responder<int> createIntResponder()
+        {
+            setupCall();
+            return Platform.createResponder<int>(
+                delegate(int result)
+                {
+                    _intResult = result;
                     _latch.Signal();
                 },
                 delegate(int errCode, string errMessage)
@@ -106,6 +128,12 @@ namespace CDOTest
             return _stringResult;
         }
 
+        protected int awaitIntResult(string method = "", int timeout = 2000)
+        {
+            waitAndCheckError(method, timeout);
+            return _intResult;
+        }
+
         protected Dictionary<string, string> awaitDictResult(string method = "",
             int timeout = 2000)
         {
@@ -148,6 +176,9 @@ namespace CDOTest
             latch.Wait();
             Assert.AreEqual(listener.initState, InitStateChangedEvent.InitState.INITIALIZED);
             _service = Platform.getService();
+            dispatcher = new CloudeoServiceEventDispatcher();
+            _service.addServiceListener(createVoidResponder(), dispatcher);
+            awaitVoidResult("addServiceListener");
         }
 
         [TearDown]

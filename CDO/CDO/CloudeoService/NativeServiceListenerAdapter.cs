@@ -150,6 +150,7 @@ namespace CDO
         private void on_media_stats_callback_t(IntPtr opaque,
             ref CDOMediaStatsEvent e)
         {
+            Console.Error.WriteLine("Media stats: " + e.stats.bitRate);
             if (_listener != null)
                 _listener.onMediaStats(
                     MediaStatsEvent.FromNative(e));

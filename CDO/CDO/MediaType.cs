@@ -9,7 +9,7 @@ namespace CDO
     {
         private string stringValue;
 
-        internal string StringValue
+        public string StringValue
         {
             get { return stringValue; }
         }

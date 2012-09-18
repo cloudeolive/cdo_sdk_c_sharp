@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using CDO;
+using System.Threading;
 
 namespace CDOTest
 {
@@ -95,6 +96,27 @@ namespace CDOTest
             Assert.AreEqual(devs.Keys.First(), awaitStringResult("getAudioCaptureDevice"));
         }
 
+        [Test]
+        public void testStartStopMonitoringMicActivity()
+        {
+            Dictionary<string, string> devs = null; ;
+            _service.getAudioCaptureDeviceNames(createDevsResponder());
+            devs = awaitDictResult("getAudioCaptureDeviceNames");
+            Assert.IsTrue(devs.Count > 0);
+            _service.setAudioCaptureDevice(createVoidResponder(), devs.Keys.First());
+            awaitVoidResult("setAudioCaptureDevice");
+            _service.monitorMicActivity(createVoidResponder(), true);
+            awaitVoidResult("monitorMicActivity");
+            int notifications = 0;
+            dispatcher.MicActivity += delegate(object sender, MicActivityEvent e) {
+                notifications++;
+            };
+            Thread.Sleep(5000);
+            _service.monitorMicActivity(createVoidResponder(), false);
+            awaitVoidResult("monitorMicActivity");
+            Assert.Greater(notifications, 0);            
+        }
+
         /*
          * Audio output devices
          * ==========================================================================
@@ -132,6 +154,21 @@ namespace CDOTest
             Assert.AreEqual(devs.Keys.First(), awaitStringResult("getAudioOutputDevice"));
         }
 
+        [Test]
+        public void testSetGetVolume()
+        {
+            Dictionary<string, string> devs = null; ;
+            _service.getAudioOutputDeviceNames(createDevsResponder());
+            devs = awaitDictResult("getAudioOutputDeviceNames");
+            Assert.IsTrue(devs.Count > 0);
+            _service.setAudioOutputDevice(createVoidResponder(), devs.Keys.First());
+            awaitVoidResult("setAudioOutputDevice");
+            _service.setSpeakersVolume(createVoidResponder(), 123);
+            awaitVoidResult("setSpeakersVolume");
+            _service.getSpeakersVolume(createIntResponder());
+            Assert.AreEqual(123, awaitIntResult("getSpeakersVolume"));
+        }
+
         /*
          * Screen sharing
          * ==========================================================================
@@ -140,8 +177,8 @@ namespace CDOTest
         [Test]
         public void testGetScreenSharingSources()
         {
-            _service.getScreenCaptureSources(createScrSourcesResponder(), 160);
-            Assert.IsTrue(awaitScrSourcesResult().Count > 0);
+            //_service.getScreenCaptureSources(createScrSourcesResponder(), 160);
+            //Assert.IsTrue(awaitScrSourcesResult().Count > 0);
         }
 
     }

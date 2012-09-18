@@ -77,18 +77,45 @@ namespace CDO
         }
     }
 
+    public class MediaStats
+    {
+        private CDOMediaStats _stats;
+
+        public float avgJitter { get {return _stats.avgJitter; }}
+            public float avOffset{ get {return _stats.avOffset; }}
+            public float bitRate{ get {return _stats.bitRate; }}
+            public float cpu{ get {return _stats.cpu; }}
+            public float fps{ get {return _stats.fps; }}
+            public float jbLength{ get {return _stats.jbLength; }}
+            public float layer{ get {return _stats.layer; }}
+            public float loss{ get {return _stats.loss; }}
+            public float maxJitter{ get {return _stats.maxJitter; }}
+            public float psnr{ get {return _stats.psnr; }}
+            public float quality{ get {return _stats.quality; }}
+            public float queueDelay{ get {return _stats.queueDelay; }}
+            public float rtt{ get {return _stats.rtt; }}
+            public float totalCpu{ get {return _stats.totalCpu; }}
+            public float totalLoss{ get {return _stats.totalLoss; }}
+            
+
+        internal MediaStats(CDOMediaStats stats)
+        {
+            _stats = stats;
+        }
+    }
+
     public class MediaStatsEvent : EventArgs
 
     {
         private string _scopeId;
         private MediaType _mediaType;
         private long _remoteUserId;
-        private Dictionary<string, float> _stats;
+        private MediaStats _stats;
 
         public string ScopeId { get { return _scopeId; } }
         public MediaType MediaType { get { return _mediaType; } }
         public long RemoteUserId { get { return _remoteUserId; } }
-        public Dictionary<string, float> Stats { get { return _stats; } }
+        public MediaStats Stats { get { return _stats; } }
 
         internal static MediaStatsEvent FromNative(
             CDOMediaStatsEvent mediaStatsEvnt)
@@ -97,30 +124,10 @@ namespace CDO
             result._scopeId = mediaStatsEvnt.scopeId.body;
             result._mediaType = MediaType.FromString(mediaStatsEvnt.mediaType.body);
             result._remoteUserId = mediaStatsEvnt.remoteUserId;
-            result._stats = getStats(mediaStatsEvnt.stats);
+            result._stats = new MediaStats(mediaStatsEvnt.stats);
             return result;
         }
 
-        internal static Dictionary<string, float> getStats(CDOMediaStats stats)
-        {
-            Dictionary<string, float> result = new Dictionary<string,float>();
-            result.Add("avgJitter", stats.avgJitter);
-            result.Add("avOffset", stats.avOffset);
-            result.Add("bitRate", stats.bitRate);
-            result.Add("cpu", stats.cpu);
-            result.Add("fps", stats.fps);
-            result.Add("jbLength", stats.jbLength);
-            result.Add("layer", stats.layer);
-            result.Add("loss", stats.loss);
-            result.Add("maxJitter", stats.maxJitter);
-            result.Add("psnr", stats.psnr);
-            result.Add("quality", stats.quality);
-            result.Add("queueDelay", stats.queueDelay);
-            result.Add("rtt", stats.rtt);
-            result.Add("totalCpu", stats.totalCpu);
-            result.Add("totalLoss", stats.totalLoss);
-            return result;
-        }
     }
 
     public class MessageEvent : EventArgs
@@ -415,13 +422,42 @@ namespace CDO
                 UserEvent(this, e);
         }
         #endregion
-        
-        public virtual void onMessage(MessageEvent e) { }
-        public virtual void onMicActivity(MicActivityEvent e) { }
-        public virtual void onMicGain(MicGainEvent e) { }
+
+        public delegate void MessageEventHandler(object sender, MessageEvent e);
+
+        public event MessageEventHandler Message;
+        public virtual void onMessage(MessageEvent e) 
+        {
+            if (Message != null)
+                Message(this, e);
+        }
+
+        public delegate void MicActivityEventHandler(object sender, MicActivityEvent e);
+
+        public event MicActivityEventHandler MicActivity;
+        public virtual void onMicActivity(MicActivityEvent e) 
+        {
+            if (MicActivity != null)
+                MicActivity(this, e);
+        }
+
+        public delegate void MicGainEventHandler(object sender, MicGainEvent e);
+        public event MicGainEventHandler MicGain;
+        public virtual void onMicGain(MicGainEvent e) 
+        {
+            if (MicGain != null)
+                MicGain(this, e);
+        }
+
+
+        public delegate void VideoFrameSizeChangedEventHandler(object sender, VideoFrameSizeChangedEvent e);
+        public event VideoFrameSizeChangedEventHandler VideoFrameSizeChanged;
         public virtual void onVideoFrameSizeChanged(
             VideoFrameSizeChangedEvent e)
-        { }
+        { 
+            if(VideoFrameSizeChanged != null)
+                VideoFrameSizeChanged(this, e);
+        }
         public virtual void onEchoEvent(EchoEvent e) { }
     }
 
