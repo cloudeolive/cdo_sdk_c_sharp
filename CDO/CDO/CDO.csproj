@@ -38,6 +38,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,18 +87,25 @@
       <DependentUpon>RenderingWidget.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="post-build.bat" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rmdir $(ProjectDir)\cloudeo_sdk_C# /s /q
-mkdir $(ProjectDir)\cloudeo_sdk_C#
-copy $(TargetDir)\$(TargetFileName) $(ProjectDir)\cloudeo_sdk_C#
-del $(ProjectDir)\Doxygen
-copy $(ProjectDir)\Doxygen.in $(ProjectDir)\Doxygen
-echo PROJECT_NUMBER = 1.17.0.0 &gt;&gt; $(ProjectDir)\Doxygen
-echo OUTPUT_DIRECTORY = $(ProjectDir)\cloudeo_sdk_C#\apidocs &gt;&gt; $(ProjectDir)\Doxygen
-echo INPUT = $(ProjectDir) &gt;&gt; $(ProjectDir)\Doxygen
+    <PostBuildEvent>if $(ConfigurationName) == Release ( 
+  rmdir $(ProjectDir)\dist /s /q
+  mkdir $(ProjectDir)\dist
+  mkdir $(ProjectDir)\dist\cloudeo_sdk_C#
+  copy $(TargetDir)\$(TargetFileName) $(ProjectDir)\dist\cloudeo_sdk_C#
+  del $(ProjectDir)\Doxygen
 
-</PostBuildEvent>
+  copy $(ProjectDir)\Doxyfile.in $(ProjectDir)\Doxyfile
+  echo PROJECT_NUMBER = 1.17.0.0 &gt;&gt; $(ProjectDir)\Doxyfile
+  echo OUTPUT_DIRECTORY = $(ProjectDir)dist\cloudeo_sdk_C#\apidocs &gt;&gt; $(ProjectDir)\Doxyfile
+  echo INPUT = $(ProjectDir) &gt;&gt; $(ProjectDir)\Doxyfile
+  doxygen $(ProjectDir)\Doxyfile
+  "C:\Program Files (x86)\7-Zip\7z.exe" a -tzip $(ProjectDir)\dist\cloudeo_sdk_C#.zip      $(ProjectDir)\dist\cloudeo_sdk_C#
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
