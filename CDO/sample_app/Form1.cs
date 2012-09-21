@@ -31,7 +31,8 @@ namespace sample_app
         private CloudeoServiceEventDispatcher _eDispatcher;
         private static Random random = new Random((int)DateTime.Now.Ticks);
 
-        
+        private string connectedScopeId;
+
         #region Initialization
 
         public Form1()
@@ -151,7 +152,7 @@ namespace sample_app
             ConnectionDescription connDescr = new ConnectionDescription();
             connDescr.autopublishAudio = true;
             connDescr.autopublishVideo = true;
-            connDescr.url = "localhost:7000/" + scopeId;
+            connDescr.url = "174.127.76.179:443/" + scopeId;
             connDescr.token = userId.ToString();
             connDescr.lowVideoStream.maxBitRate = 64;
             connDescr.lowVideoStream.maxWidth = 320;
@@ -167,13 +168,15 @@ namespace sample_app
             connDescr.highVideoStream.publish = true;
             connDescr.highVideoStream.receive = true;
             connDescr.authDetails = genAuthDetails(scopeId, userId);
+            connectedScopeId = scopeId;
             Platform.Service.connect(genGenericResponder<object>("connect"), connDescr);
             
         }
 
         private void disconnectBtn_Click(object sender, EventArgs e)
         {
-
+            Platform.Service.disconnect(genGenericResponder<object>
+                ("disconnect"), connectedScopeId);
         }
 
         #endregion

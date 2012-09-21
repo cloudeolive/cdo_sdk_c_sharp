@@ -47,6 +47,8 @@ namespace CDOTest
             _service.connect(createVoidResponder(), connDescr);
             awaitVoidResult("connect", 10000);
 
+            Thread.Sleep(1000);
+
             _service.publish(createVoidResponder(), scopeId, MediaType.AUDIO, null);
             awaitVoidResult("publish audio");
 
@@ -56,6 +58,33 @@ namespace CDOTest
             awaitVoidResult("publish video", 10000);
 
             Thread.Sleep(5000);
+            _service.disconnect(createVoidResponder(), scopeId);
+            awaitVoidResult("disconnect");
+
+        }
+
+        [Test]
+        public void testPublishScreen()
+        {
+            setupDevs();
+            string scopeId = "c_sharp_test_room";
+            ConnectionDescription connDescr = genDefConnDescr(scopeId);
+            connDescr.autopublishAudio = false;
+            connDescr.autopublishVideo = false;
+
+            _service.connect(createVoidResponder(), connDescr);
+            awaitVoidResult("connect", 10000);
+
+            _service.getScreenCaptureSources(createScrSourcesResponder(), 160);
+            List<ScreenCaptureSource> sources = awaitScrSourcesResult();
+
+            MediaPublishOptions options = new MediaPublishOptions();
+            options.windowId = sources[0].id;
+            options.nativeWidth = 640;
+            _service.publish(createVoidResponder(), scopeId, MediaType.SCREEN, options);
+            awaitVoidResult("publish screen", 10000);
+
+            Thread.Sleep(15000);
             _service.disconnect(createVoidResponder(), scopeId);
             awaitVoidResult("disconnect");
 

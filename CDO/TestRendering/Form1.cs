@@ -81,6 +81,8 @@ namespace TestRendering
 
         private void onPlatformReady()
         {
+            Platform.getService().getScreenCaptureSources(Platform.R<List<ScreenCaptureSource>>(), 240);
+            
             Platform.getService().getVersion(Platform.R<string>(onVersion));
             Platform.getService().getVideoCaptureDeviceNames(
                 Platform.R<Dictionary<string,string>>(onVideoDevices));

@@ -86,7 +86,7 @@ namespace CDO
             nListener.onVideoFrameSizeChanged =
                 _on_video_frame_size_changed_callback_t;
             return nListener;
-            
+
         }
 
 
@@ -95,86 +95,153 @@ namespace CDO
         private void on_video_frame_size_changed_callback_t(IntPtr opaque,
             ref CDOVideoFrameSizeChangedEvent e)
         {
-            if (_listener != null)
-                _listener.onVideoFrameSizeChanged(
-                    VideoFrameSizeChangedEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onVideoFrameSizeChanged(
+                        VideoFrameSizeChangedEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_connection_lost_callback_t(IntPtr opaque,
             ref CDOConnectionLostEvent e)
         {
-            if (_listener != null)
-                _listener.onConnectionLost(
-                    ConnectionLostEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onConnectionLost(
+                        ConnectionLostEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_user_event_callback_t(IntPtr opaque,
             ref CDOUserStateChangedEvent e)
         {
-            if (_listener != null)
-                _listener.onUserEvent(
-                    UserStateChangedEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onUserEvent(
+                        UserStateChangedEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_media_stream_callback_t(IntPtr opaque,
             ref CDOUserStateChangedEvent e)
         {
-            if (_listener != null)
-                _listener.onMediaStreamEvent(
-                    UserStateChangedEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onMediaStreamEvent(
+                        UserStateChangedEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_mic_activity_callback_t(IntPtr opaque,
             ref CDOMicActivityEvent e)
         {
-            if (_listener != null)
-                _listener.onMicActivity(
-                    MicActivityEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onMicActivity(
+                        MicActivityEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_mic_gain_callback_t(IntPtr opaque,
             ref CDOMicGainEvent e)
         {
-            if (_listener != null)
-                _listener.onMicGain(MicGainEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onMicGain(MicGainEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_device_list_changed_callback_t(IntPtr opaque,
             ref CDODeviceListChangedEvent e)
         {
-            if (_listener != null)
-                _listener.onDeviceListChanged(
-                    DeviceListChangedEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onDeviceListChanged(
+                        DeviceListChangedEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_media_stats_callback_t(IntPtr opaque,
             ref CDOMediaStatsEvent e)
         {
-            Console.Error.WriteLine("Media stats: " + e.stats.bitRate);
-            if (_listener != null)
-                _listener.onMediaStats(
-                    MediaStatsEvent.FromNative(e));
+            try
+            {
+                Console.Error.WriteLine("Media stats: " + e.stats.bitRate);
+                if (_listener != null)
+                    _listener.onMediaStats(
+                        MediaStatsEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_message_callback_t(IntPtr opaque,
             ref CDOMessageEvent e)
         {
-            if (_listener != null)
-                _listener.onMessage(MessageEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onMessage(MessageEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_media_conn_type_changed_callback_t(IntPtr opaque,
             ref CDOMediaConnTypeChangedEvent e)
         {
-            if (_listener != null)
-                _listener.onMediaConnTypeChanged(
-                    MediaConnTypeChangedEvent.FromNative(e));
+            try
+            {
+
+                if (_listener != null)
+                    _listener.onMediaConnTypeChanged(
+                        MediaConnTypeChangedEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
         }
 
         private void on_echo_callback_t(IntPtr opaque, ref CDOEchoEvent e)
         {
-            if (_listener != null)
-                _listener.onEchoEvent(EchoEvent.FromNative(e));
+            try
+            {
+                if (_listener != null)
+                    _listener.onEchoEvent(EchoEvent.FromNative(e));
+            }
+            catch (Exception )
+            {
+            }
 
         }
     }

@@ -31,6 +31,15 @@ namespace CDOTest
         protected CloudeoServiceEventDispatcher dispatcher;
         private int _lastError;
         private string _lastErrMessage;
+        private ManualRenderer _mRendererResult;
+        private RenderingWidget _renderingWidgetResult;
+
+        private void errHandler(int errCode, string errMessage)
+        {
+            _lastError = errCode;
+            _lastErrMessage = errMessage;
+            _latch.Signal();
+        }
 
         protected Responder<string> createStringResponder()
         {
@@ -40,13 +49,7 @@ namespace CDOTest
                 {
                     _stringResult = result;
                     _latch.Signal();
-                },
-                delegate(int errCode, string errMessage)
-                {
-                    _lastError = errCode;
-                    _lastErrMessage = errMessage;
-                    _latch.Signal();
-                }
+                }, errHandler
                 );
         }
 
@@ -59,12 +62,33 @@ namespace CDOTest
                     _intResult = result;
                     _latch.Signal();
                 },
-                delegate(int errCode, string errMessage)
+                errHandler
+                );
+        }
+
+        protected Responder<ManualRenderer> createManualRendererResponder()
+        {
+            setupCall();
+            return Platform.createResponder<ManualRenderer>(
+                delegate(ManualRenderer result)
                 {
-                    _lastError = errCode;
-                    _lastErrMessage = errMessage;
+                    _mRendererResult = result;
                     _latch.Signal();
-                }
+                },
+                errHandler
+                );
+        }
+
+        protected Responder<RenderingWidget> createRendererResponder()
+        {
+            setupCall();
+            return Platform.createResponder<RenderingWidget>(
+                delegate(RenderingWidget result)
+                {
+                    _renderingWidgetResult = result;
+                    _latch.Signal();
+                },
+                errHandler
                 );
         }
 
@@ -76,12 +100,7 @@ namespace CDOTest
                 {
                     _latch.Signal();
                 },
-                delegate(int errCode, string errMessage)
-                {
-                    _lastError = errCode;
-                    _lastErrMessage = errMessage; 
-                    _latch.Signal();
-                }
+                errHandler
                 );
         }
 
@@ -94,12 +113,7 @@ namespace CDOTest
                     _devsResult = result;
                     _latch.Signal();
                 },
-                delegate(int errCode, string errMessage)
-                {
-                    _lastError = errCode;
-                    _lastErrMessage = errMessage; 
-                    _latch.Signal();
-                }
+                errHandler
                 );
         }
 
@@ -112,12 +126,7 @@ namespace CDOTest
                     _scrSourcesResult = result;
                     _latch.Signal();
                 },
-                delegate(int errCode, string errMessage)
-                {
-                    _lastError = errCode;
-                    _lastErrMessage = errMessage;
-                    _latch.Signal();
-                }
+                errHandler
                 );
         }
 
@@ -150,6 +159,19 @@ namespace CDOTest
         protected void awaitVoidResult(string method = "", int timeout = 2000)
         {
             waitAndCheckError(method, timeout);
+        }
+
+        protected ManualRenderer awaitManualRendererResult(string method = "", int timeout = 2000)
+        {
+            waitAndCheckError(method, timeout);
+            return _mRendererResult;
+        }
+
+
+        protected RenderingWidget awaitRendererResult(string method = "", int timeout = 2000)
+        {
+            waitAndCheckError(method, timeout);
+            return _renderingWidgetResult;
         }
 
         private void setupCall()

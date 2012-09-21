@@ -37,6 +37,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,8 +49,12 @@
     <Compile Include="AbstractCloudeoServiceTest.cs" />
     <Compile Include="CloudeoServiceConnectivityTest.cs" />
     <Compile Include="CloudeoServiceListenerTest.cs" />
-    <Compile Include="CloudeoServiceTest.cs" />
-    <Compile Include="CloudeoServiceDevicesTest.cs" />
+    <Compile Include="CloudeoServiceTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CloudeoServiceDevicesTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Helpers.cs" />
     <Compile Include="PlatformTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

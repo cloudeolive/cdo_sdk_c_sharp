@@ -13,6 +13,8 @@ using System.Text;
 using NUnit.Framework;
 using CDO;
 using System.Threading;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace CDOTest
 {
@@ -108,13 +110,14 @@ namespace CDOTest
             _service.monitorMicActivity(createVoidResponder(), true);
             awaitVoidResult("monitorMicActivity");
             int notifications = 0;
-            dispatcher.MicActivity += delegate(object sender, MicActivityEvent e) {
+            dispatcher.MicActivity += delegate(object sender, MicActivityEvent e)
+            {
                 notifications++;
             };
             Thread.Sleep(5000);
             _service.monitorMicActivity(createVoidResponder(), false);
             awaitVoidResult("monitorMicActivity");
-            Assert.Greater(notifications, 0);            
+            Assert.Greater(notifications, 0);
         }
 
         /*
@@ -174,12 +177,57 @@ namespace CDOTest
          * ==========================================================================
          */
 
+        
         [Test]
         public void testGetScreenSharingSources()
         {
-            //_service.getScreenCaptureSources(createScrSourcesResponder(), 160);
-            //Assert.IsTrue(awaitScrSourcesResult().Count > 0);
+            _service.getScreenCaptureSources(createScrSourcesResponder(), 160);
+            List<ScreenCaptureSource> sources = awaitScrSourcesResult(10000);
+            Assert.IsTrue(sources.Count > 0);
+            Console.Error.WriteLine("Got sources: " + sources.Count);
+            CountdownLatch latch = new CountdownLatch(1);
+            PictureForm pForm = new PictureForm(sources);
+            pForm.ShowDialog();
         }
 
     }
+
+    class PictureWithLabel : Panel
+    {
+        private Label label = new Label();
+        private PictureBox pictureBox = new PictureBox();
+
+        public PictureWithLabel(ScreenCaptureSource src)
+        {
+            this.Width = 160;
+            this.Height = 140;
+            label.Text = src.title;
+            pictureBox.Image = src.snapshot;
+            pictureBox.SetBounds(0, 0, 160, 120);
+            label.SetBounds(0, 120, 160, 20);
+            Controls.Add(label);
+            Controls.Add(pictureBox);
+        }
+    }
+
+    class PictureForm : Form
+    {
+        private FlowLayoutPanel flowLayout = new FlowLayoutPanel();
+        
+        List<ScreenCaptureSource> sources;
+        public PictureForm(List<ScreenCaptureSource> sources)
+        {
+            this.sources = sources;
+            this.Height = 480;
+            this.Width = 640;
+            flowLayout.SetBounds(0, 0, 640, 480);
+            Controls.Add(flowLayout);
+            foreach (ScreenCaptureSource src in sources)
+            {
+                PictureWithLabel pwl = new PictureWithLabel(src);
+                flowLayout.Controls.Add(pwl);
+            }
+        }
+    }
+
 }

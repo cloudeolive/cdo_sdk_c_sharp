@@ -1,4 +1,12 @@
-﻿namespace CDO
+﻿/*!
+ * Cloudeo SDK C# bindings.
+ * http://www.cloudeo.tv
+ *
+ * Copyright (C) SayMama Ltd 2012
+ * Released under the BSD license.
+ */
+
+namespace CDO
 {
     internal static class StringHelper
     {

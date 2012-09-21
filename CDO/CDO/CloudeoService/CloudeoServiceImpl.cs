@@ -66,6 +66,7 @@ namespace CDO
         private cdo_get_device_names_rclbck_t _devsRCallback;
 
         private cdo_get_screen_capture_srcs_rclbck_t _screenSourceRCallback;
+        //private cdo_raw_data_rclbck_t _rawScreenSharingSourcesRCallback;
         /// <summary>
         /// List of all registered CloudeoServiceListener adapters. To prevent 
         /// deallocation when passing delegate to the native code.
@@ -106,7 +107,7 @@ namespace CDO
             _stringRCallback = new cdo_string_rclbck_t(stringRCallback);
             _intRCallback = new cdo_int_rclbck_t(intRCallback);
             _devsRCallback = new cdo_get_device_names_rclbck_t(devsRCallback);
-            _screenSourceRCallback = 
+            _screenSourceRCallback =
                 new cdo_get_screen_capture_srcs_rclbck_t(screenCaptureSourcesRClbck);
         }
 
@@ -314,7 +315,7 @@ namespace CDO
         {
             if (!isPlatformInitialized<List<ScreenCaptureSource>>(responder))
                 return;
-
+            Console.Error.WriteLine("Getting the screen sharing sources");
             NativeAPI.cdo_get_screen_capture_sources(_screenSourceRCallback,
                 _platformHandle, saveResponder(responder), thumbWidth);
         }
@@ -561,30 +562,11 @@ namespace CDO
             _renderSupport.renderSink(responder, options);
         }
 
-        public void startRender(Responder<int> responder, RenderOptions options)
+        public void manualRenderSink(Responder<ManualRenderer> responder, RenderOptions options)
         {
-            if (!isPlatformInitialized<int>(responder))
+            if (!isPlatformInitialized<ManualRenderer>(responder))
                 return;
-            CDORenderRequest nativeR = RenderOptions.toNative(options);
-            NativeAPI.cdo_render_sink(_intRCallback, _platformHandle,
-                saveResponder(responder), ref nativeR);
-        }
-
-        public void stopRender(Responder<object> responder, int rendererId)
-        {
-            if (!isPlatformInitialized<object>(responder))
-                return;
-
-            NativeAPI.cdo_stop_render(_voidRCallback, _platformHandle,
-                saveResponder(responder), rendererId);
-        }
-
-        public void draw(DrawRequest drawRequest)
-        {
-            if (_platformHandle == IntPtr.Zero)
-                return;
-            CDODrawRequest nReq = drawRequest.toNative();
-            NativeAPI.cdo_draw(_platformHandle, ref nReq);
+            _renderSupport.manualRenderSink(responder, options);
         }
 
         #endregion
@@ -658,11 +640,15 @@ namespace CDO
         {
             Responder<object> responder = (Responder<object>)getResponder(
                 (uint)opaque);
-
-            if (error.err_code == 0)
-                responder.resultHandler(null);
-            else
-                responder.errHandler(error.err_code, error.err_message.body);
+            try
+            {
+                if (error.err_code == 0)
+                    responder.resultHandler(null);
+                else
+                    responder.errHandler(error.err_code, error.err_message.body);
+            }
+            catch (Exception) { }
+            
         }
 
         // =====================================================================
@@ -679,11 +665,17 @@ namespace CDO
         {
             Responder<string> responder = (Responder<string>)getResponder(
                 (uint)opaque);
+            try 
+            {
 
-            if (error.err_code == 0)
-                responder.resultHandler(str.body);
-            else
-                responder.errHandler(error.err_code, error.err_message.body);
+                if (error.err_code == 0)
+                    responder.resultHandler(str.body);
+                else
+                    responder.errHandler(error.err_code, error.err_message.body);
+            
+            }
+            catch (Exception) { }
+            
         }
 
         // =====================================================================
@@ -699,11 +691,15 @@ namespace CDO
         {
             Responder<int> responder =
                 (Responder<int>)getResponder((uint)opaque);
-
-            if (error.err_code == 0)
-                responder.resultHandler(i);
-            else
-                responder.errHandler(error.err_code, error.err_message.body);
+            try 
+            {
+                if (error.err_code == 0)
+                    responder.resultHandler(i);
+                else
+                    responder.errHandler(error.err_code, error.err_message.body);
+            }
+            catch (Exception) { }
+            
         }
 
         // =====================================================================
@@ -718,63 +714,76 @@ namespace CDO
         private void devsRCallback(IntPtr opaque,
             ref CDOError error, IntPtr device, UIntPtr size)
         {
-            Responder<Dictionary<string, string>> responder =
-                (Responder<Dictionary<string, string>>)
-                getResponder((uint)opaque);
-
-            Dictionary<string, string> devList =
-                new Dictionary<string, string>();
-
-            // 'device' is an array of 'CDODevice' structures, add devices to
-            // devList
-            var arrayValue = device;
-            var tableEntrySize = Marshal.SizeOf(typeof(CDODevice));
-            uint tableSize = (uint)size;
-            for (var i = 0; i < tableSize; i++)
+            try 
             {
-                var cur = (CDODevice)Marshal.PtrToStructure(
-                    arrayValue, typeof(CDODevice));
-                devList.Add(cur.id.body, cur.label.body);
-                arrayValue = new IntPtr(arrayValue.ToInt32() + tableEntrySize);
+
+                Responder<Dictionary<string, string>> responder =
+                    (Responder<Dictionary<string, string>>)
+                    getResponder((uint)opaque);
+
+                Dictionary<string, string> devList =
+                    new Dictionary<string, string>();
+
+                // 'device' is an array of 'CDODevice' structures, add devices to
+                // devList
+                var arrayValue = device;
+                var tableEntrySize = Marshal.SizeOf(typeof(CDODevice));
+                uint tableSize = (uint)size;
+                for (var i = 0; i < tableSize; i++)
+                {
+                    var cur = (CDODevice)Marshal.PtrToStructure(
+                        arrayValue, typeof(CDODevice));
+                    devList.Add(cur.id.body, cur.label.body);
+                    arrayValue = new IntPtr(arrayValue.ToInt32() + tableEntrySize);
+                }
+
+
+                if (error.err_code == 0)
+                    responder.resultHandler(devList);
+                else
+                    responder.errHandler(error.err_code, error.err_message.body);
+            
             }
-
-
-            if (error.err_code == 0)
-                responder.resultHandler(devList);
-            else
-                responder.errHandler(error.err_code, error.err_message.body);
+            catch (Exception) { }
+            
         }
 
         private void screenCaptureSourcesRClbck(IntPtr opaque,
             ref CDOError error, IntPtr sources, UIntPtr size)
         {
-            
-            Responder<List<ScreenCaptureSource>> responder =
-                (Responder<List<ScreenCaptureSource>>)
-                getResponder((uint)opaque);
-            if (error.err_code != 0)
+            try
             {
-                responder.errHandler(error.err_code, error.err_message.body);
-            }
-            List<ScreenCaptureSource> sourcesList =
-                new List<ScreenCaptureSource>();
 
-            var arrayValue = sources;
-            var tableEntrySize = Marshal.SizeOf(typeof(CDOScreenCaptureSource));
-            uint tableSize = (uint)size;
-            ASCIIEncoding enc = new ASCIIEncoding();
-            for (var i = 0; i < tableSize; i++)
-            {
-                CDOScreenCaptureSource cur =
-                    (CDOScreenCaptureSource)Marshal.PtrToStructure(
-                    arrayValue, typeof(CDOScreenCaptureSource));
-                
-                sourcesList.Add(
-                    new ScreenCaptureSource(cur.id.body, "", 
-                        enc.GetBytes(cur.imageData)));
-                arrayValue = new IntPtr(arrayValue.ToInt32() + tableEntrySize);
+                Responder<List<ScreenCaptureSource>> responder =
+                    (Responder<List<ScreenCaptureSource>>)
+                    getResponder((uint)opaque);
+                if (error.err_code != 0)
+                {
+                    responder.errHandler(error.err_code, error.err_message.body);
+                }
+                List<ScreenCaptureSource> sourcesList =
+                    new List<ScreenCaptureSource>();
+
+                var arrayValue = sources;
+                var tableEntrySize = Marshal.SizeOf(typeof(CDOScreenCaptureSource));
+                uint tableSize = (uint)size;
+            
+                for (var i = 0; i < tableSize; i++)
+                {
+                    CDOScreenCaptureSource cur =
+                        (CDOScreenCaptureSource)Marshal.PtrToStructure(
+                        arrayValue, typeof(CDOScreenCaptureSource));
+                    byte[] snapshotArrayData = new byte[(uint)cur.imageDataLen];
+                    Marshal.Copy(cur.imageData, snapshotArrayData, 0, (int)(uint)cur.imageDataLen);
+                    sourcesList.Add(
+                        new ScreenCaptureSource(cur.id.body, cur.title.body,
+                            snapshotArrayData));
+                    arrayValue = new IntPtr(arrayValue.ToInt32() + tableEntrySize);
+                }
+                responder.resultHandler(sourcesList);
             }
-            responder.resultHandler(sourcesList);
+            catch (Exception) { }
+            
         }
 
 
