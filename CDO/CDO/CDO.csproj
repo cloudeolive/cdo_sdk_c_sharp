@@ -80,15 +80,9 @@
     <Compile Include="SdkWrapper\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="diff.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="CloudeoService\rendering\RenderingWidget.resx">
       <DependentUpon>RenderingWidget.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="post-build.bat" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

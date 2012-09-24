@@ -196,7 +196,7 @@ namespace CDOTest
             InitListener listener = new InitListener(latch);
             Platform.init(listener);
             latch.Wait();
-            Assert.AreEqual(listener.initState, InitStateChangedEvent.InitState.INITIALIZED);
+            Assert.AreEqual(InitStateChangedEvent.InitState.INITIALIZED, listener.initState, "Failed to initialize the platform due to: " + listener.errMsg);
             _service = Platform.getService();
             dispatcher = new CloudeoServiceEventDispatcher();
             _service.addServiceListener(createVoidResponder(), dispatcher);

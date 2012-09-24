@@ -32,6 +32,7 @@ namespace CDOTest
         public void onInitStateChanged(InitStateChangedEvent e)
         {
             _initState = e.state;
+            _errMsg = e.errMessage;
             _latch.Signal();
         }
 
@@ -40,6 +41,9 @@ namespace CDOTest
             get { return this._initState; }
         }
 
+        public string errMsg {get {return this._errMsg;}}
+
+        private string _errMsg;
         private InitStateChangedEvent.InitState _initState;
         private CountdownLatch _latch;
 

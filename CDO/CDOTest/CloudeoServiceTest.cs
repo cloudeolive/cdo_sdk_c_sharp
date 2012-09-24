@@ -132,6 +132,7 @@ namespace CDOTest
             TestRenderingForm renderingForm = new TestRenderingForm(mRenderer);
 
             renderingForm.ShowDialog();
+            
             _service.stopLocalVideo(createVoidResponder());
             awaitVoidResult();
         }
